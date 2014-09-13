@@ -40,4 +40,8 @@ gem 'capistrano-rails', group: :development
 
 gem 'haml-rails'
 gem 'rspec-rails'
+gem 'factory_girl_rails'
 gem 'pg'
+gem 'forgery'
+gem 'shoulda-matchers'
+gem 'httparty'
