@@ -3,7 +3,10 @@ class User < ActiveRecord::Base
     has_many :collections, class_name: "LinkCollection"
     has_and_belongs_to_many :viewable_collections, class_name: "LinkCollection"
     
-    validates :email, presence: true
+    validates :email, presence: true, uniqueness: true
+    validates :username, uniqueness: true
+    
+    scope :like, ->(q) { where("UPPER(username) LIKE UPPER('%#{q}%') OR UPPER(email) LIKE UPPER('%#{q}%')") }
     
     def store_password!(password)
         self.salt = secure_hash("#{Time.now.utc.to_f}--#{password}")

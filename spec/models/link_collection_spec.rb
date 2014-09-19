@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe LinkCollection, :type => :model do
+  
+  it { should validate_presence_of(:name) }
+  
+  pending { should validate_uniqueness_of(:name).scoped_to(:user).with_message("should be unique for user") }
+  
   it "should be non-public by default" do
     c = FactoryGirl.create :link_collection
     expect(c.pub).to eq(false)

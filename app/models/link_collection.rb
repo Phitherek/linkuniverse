@@ -5,8 +5,11 @@ class LinkCollection < ActiveRecord::Base
   belongs_to :user
   has_and_belongs_to_many :viewers, class_name: "User"
   
+  validates :name, presence: true, uniqueness: { scope: :user, message: "should be unique for user" }
+  
   default_scope { where(pub: false) }
-  scope :pub, -> { where(pub: true) }
+  scope :pub, -> { unscoped.where(pub: true) }
+  scope :like, ->(q) { where("UPPER(name) LIKE UPPER('%#{q}%')") }
   
   def pub!
     self.pub = true

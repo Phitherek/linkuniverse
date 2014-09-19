@@ -4,6 +4,11 @@ class Link < ActiveRecord::Base
   
   before_save :ensure_correct_url, :ensure_title
   
+  validates :url, uniqueness: { scope: :collection, message: "should be unique inside collection" }
+  validates :title, uniqueness: { scope: :collection, message: "should be unique inside collection" }
+  
+  scope :like, ->(q) { where("UPPER(title) LIKE UPPER('%#{q}%') OR UPPER(url) LIKE UPPER('%#{q}%')") }
+  
   def fetch_title!
     t = nil
     if HTTParty.head(self.url).content_type == "text/html"

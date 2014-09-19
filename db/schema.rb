@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140906192205) do
+ActiveRecord::Schema.define(version: 20140919195922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,18 +32,22 @@ ActiveRecord::Schema.define(version: 20140906192205) do
     t.datetime "updated_at"
   end
 
+  create_table "link_collections_users", id: false, force: true do |t|
+    t.integer "user_id"
+    t.integer "link_collection_id"
+  end
+
   create_table "links", force: true do |t|
     t.string   "title"
     t.text     "description"
-    t.string   "url",                null: false
-    t.integer  "link_collection_id"
+    t.string   "url",           null: false
+    t.integer  "collection_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "users", force: true do |t|
     t.string   "username"
-    t.string   "null"
     t.string   "email"
     t.text     "description"
     t.string   "hashed_password"
@@ -52,9 +56,12 @@ ActiveRecord::Schema.define(version: 20140906192205) do
     t.datetime "updated_at"
   end
 
-  create_table "viewable_collections_viewers", id: false, force: true do |t|
-    t.integer "viewer_id"
-    t.integer "viewable_collection_id"
+  create_table "votes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "link_id"
+    t.boolean  "positive",   default: true, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

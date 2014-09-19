@@ -7,9 +7,9 @@ class CreateLinkCollections < ActiveRecord::Migration
       t.timestamps
     end
     
-    create_table :viewable_collections_viewers, id: false do |t|
-      t.belongs_to :viewer
-      t.belongs_to :viewable_collection
+    create_table :link_collections_users, id: false do |t|
+      t.belongs_to :user
+      t.belongs_to :link_collection
     end
   end
 end
