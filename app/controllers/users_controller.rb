@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+    
+    before_filter :find_user, except: [:login, :logout, :register]
+    
     def login
         if request.get?
             if !current_user.nil?
@@ -23,6 +26,7 @@ class UsersController < ApplicationController
     
     def logout
         session.delete(:logged_in_user_id)
+        flash[:notice] = "Logout successful!"
         redirect_to root_path
     end
     
@@ -55,7 +59,6 @@ class UsersController < ApplicationController
     end
     
     def show
-        
     end
     
     def edit
@@ -70,5 +73,19 @@ class UsersController < ApplicationController
     
     def user_params
         params.require(:user).permit(:username, :email, :description)
+    end
+    
+    def find_user
+        begin
+            @user = User.find(params[:id])
+        rescue ActiveRecord::RecordNotFound => e
+            render_error :notfound
+        end
+    end
+    
+    def ensure_owner
+        if @user != current_user
+            render_error :forbidden
+        end
     end
 end
