@@ -1,0 +1,22 @@
+- content_for :title do
+    Register
+%h2 Register for a free account
+= form_for @user, url: register_users_path do |f|
+    .row
+        = f.label :email, "Email:"
+        = f.email_field :email
+    .row
+        = f.label :username, "Username:"
+        = f.text_field :username
+    .row
+        = f.label :description, "Description:"
+    .row
+        = f.text_area :description, rows: 10, cols: 50
+    .row
+        = f.label :password, "Password:"
+        = f.password_field :password
+    .row
+        = f.label :password_confirmation, "Confirm password:"
+        = f.password_field :password_confirmation
+    .row
+        = f.submit "Register"

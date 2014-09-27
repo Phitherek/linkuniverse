@@ -53,4 +53,18 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+  
+  root :to => "collections#index"
+  
+  resources :users, only: [:show, :edit, :update] do
+      collection do
+          get 'login'
+          post 'login'
+          get 'register'
+          post 'register'
+          delete 'logout'
+      end
+  end
+  
+  resources :collections, only: [:show]
 end

@@ -1,0 +1,24 @@
+!!! 5
+%html
+    %head
+        %title
+            = yield :title
+            \- LinkUniverse
+        = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+        = javascript_include_tag 'application', 'data-turbolinks-track' => true
+        = csrf_meta_tags
+    %body
+        %header
+            %h1 LinkUniverse
+            %p A link collection sharing service
+        .notice
+            = flash[:notice] if flash[:notice]
+        .error
+            = flash[:error] if flash[:error]
+        = yield :userbox
+        = yield
+        %footer
+            %p LinkUniverse engine v. 0.0-pre &copy; 2014 by Phitherek_
+            %p
+                Powered by
+                = link_to "Ruby on Rails", "http://www.rubyonrails.org"

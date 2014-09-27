@@ -10,6 +10,7 @@ class LinkCollection < ActiveRecord::Base
   default_scope { where(pub: false) }
   scope :pub, -> { unscoped.where(pub: true) }
   scope :like, ->(q) { where("UPPER(name) LIKE UPPER('%#{q}%')") }
+  scope :toplevel, -> { where(parent: nil) }
   
   def pub!
     self.pub = true

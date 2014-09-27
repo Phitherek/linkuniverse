@@ -1,0 +1,10 @@
+.collection
+    = link_to c.name, collection_path(c), class: :name
+    %p.author
+        By:
+        = link_to c.user.username, user_path(c.user)
+    %p.stats
+        = c.links.count
+        links,
+        = c.children.count
+        subcategories
