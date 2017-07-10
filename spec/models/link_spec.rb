@@ -16,7 +16,7 @@ RSpec.describe Link, :type => :model do
   it "should paste link in title if title not resolved and not given" do
     l = FactoryGirl.build :no_title_link
     expect {l.save!}.not_to raise_error
-    expect(l.title).to eq("http://mirror.anl.gov/pub/ubuntu-iso/DVDs/ubuntu/14.10/alpha-1/source/utopic-src-1.iso")
+    expect(l.title).to eq("https://notitle.phitherek.me")
   end
   
   it "should raise error if link not correct and title not given" do

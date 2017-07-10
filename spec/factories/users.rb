@@ -5,5 +5,7 @@ FactoryGirl.define do
     username { Forgery(:name).company_name }
     email { Forgery(:internet).email_address }
     description { Forgery(:lorem_ipsum).words(20, random: true) }
+    password "testtest"
+    password_confirmation "testtest"
   end
 end
