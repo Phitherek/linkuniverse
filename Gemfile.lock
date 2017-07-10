@@ -28,7 +28,12 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
+    autoprefixer-rails (7.1.2.1)
+      execjs
     bcrypt (3.1.11)
+    bootstrap-sass (3.3.5)
+      autoprefixer-rails (>= 5.0.0.1)
+      sass (>= 3.2.19)
     builder (3.2.2)
     capistrano (3.2.1)
       i18n
@@ -56,6 +61,8 @@ GEM
     factory_girl_rails (4.4.1)
       factory_girl (~> 4.4.0)
       railties (>= 3.0.0)
+    font-awesome-sass (4.7.0)
+      sass (>= 3.2)
     forgery (0.6.0)
     haml (4.0.5)
       tilt
@@ -175,9 +182,11 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt (~> 3.1.7)
+  bootstrap-sass
   capistrano-rails
   coffee-rails (~> 4.0.0)
   factory_girl_rails
+  font-awesome-sass
   forgery
   haml-rails
   httparty

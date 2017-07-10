@@ -4,19 +4,15 @@ class UsersController < ApplicationController
     
     def login
         if request.get?
-            if !current_user.nil?
+            unless current_user.nil?
                 redirect_to root_path and return
             end
         elsif request.post?
-            @user = User.find_by_email(params[:email])
+            @user = User.find_by_email(params[:email]).try(:authenticate, params[:password])
             if !@user.nil?
-                if @user.password_matches?(params[:password])
-                    session[:logged_in_user_id] = @user.id
-                    flash[:notice] = "Login successful!"
-                    redirect_to root_path and return
-                else
-                    flash[:error] = "Login failed!"
-                end
+                session[:logged_in_user_id] = @user.id
+                flash[:notice] = "Login successful!"
+                redirect_to root_path and return
             else
                 flash[:error] = "Login failed!"
             end
@@ -33,26 +29,12 @@ class UsersController < ApplicationController
     def register
         @user = User.new
         if request.post?
-            password = params[:user].delete(:password)
-            password_confirmation = params[:user].delete(:password_confirmation)
-            if password && password_confirmation && !password.empty? && !password_confirmation.empty?
-                if password == password_confirmation
-                    @user.attributes = user_params
-                    begin
-                        @user.store_password!(password)
-                        flash[:notice] = "Registration successfull!"
-                        redirect_to login_users_path and return
-                    rescue Exception => e
-                        error_msg = e.to_s
-                    end
-                else
-                    error_msg = "Password and confirmation do not match!"
-                end
+            @user.attributes = user_params
+            if @user.save
+                flash[:notice] = "Registration successful!"
+                redirect_to root_path and return
             else
-                error_msg = "Password and password confirmation are required!"
-            end
-            if error_msg
-                flash[:error] = error_msg
+                flash[:error] = "Could not register: " + @user.errors.full_messages.join(", ") + "!"
             end
             render :register
         end
@@ -72,7 +54,7 @@ class UsersController < ApplicationController
     private
     
     def user_params
-        params.require(:user).permit(:username, :email, :description)
+        params.require(:user).permit(:username, :email, :description, :password, :password_confirmation)
     end
     
     def find_user
