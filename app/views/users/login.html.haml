@@ -4,8 +4,8 @@
 = form_tag nil, class: "form-horizontal" do
   .form-group
     .col-sm-4
-      = label_tag :email, "Email:"
-      = email_field_tag :email, '', class: "form-control"
+      = label_tag :key, "Username or Email:"
+      = text_field_tag :key, '', class: "form-control"
   .form-group
     .col-sm-4
       = label_tag :password, "Password:"

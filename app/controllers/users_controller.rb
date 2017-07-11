@@ -8,7 +8,7 @@ class UsersController < ApplicationController
                 redirect_to root_path and return
             end
         elsif request.post?
-            @user = User.find_by_email(params[:email]).try(:authenticate, params[:password])
+            @user = User.find_by_username_or_email(params[:key]).try(:authenticate, params[:password])
             if !@user.nil?
                 session[:logged_in_user_id] = @user.id
                 flash[:notice] = "Login successful!"
