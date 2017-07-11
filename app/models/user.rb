@@ -13,4 +13,4 @@ class User < ActiveRecord::Base
     User.where("email = ? OR username = ?", key, key).first
   end
 
-  end
+end
