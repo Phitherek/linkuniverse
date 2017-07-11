@@ -9,4 +9,9 @@ class CollectionsController < ApplicationController
     end
     add_breadcrumb 'Home'
   end
+
+  def new
+    add_breadcrumb 'Home', root_path
+    add_breadcrumb 'New collection'
+  end
 end

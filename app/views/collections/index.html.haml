@@ -31,3 +31,6 @@
     - else
       - @public_collections.each do |c|
         = render partial: "collection", locals: {c: c}
+  %a.btn.btn-success{href: new_collection_path}
+    = icon('plus')
+    Add collection
