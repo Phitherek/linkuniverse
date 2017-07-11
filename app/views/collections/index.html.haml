@@ -1,16 +1,33 @@
 - content_for :title do
-    Collections
+  Collections
 - content_for :userbox do
-    = render partial: "application/userbox", locals: {u: @user}
-- if @user.nil?
-    - if @collections.empty?
-        %p.notice No public collections yet...
-    - else
-        - @collections.each do |c|
-            = render partial: "collection", locals: {c: c}
+  = render partial: "application/userbox", locals: {u: current_user}
+- if current_user.nil?
+  %h3 Public collections
+  - if @collections.empty?
+    .alert.alert-info No public collections yet...
+  - else
+    - @collections.each do |c|
+      = render partial: "collection", locals: {c: c}
 - else
-    - if @collections.empty?
-        %p.notice No collections for you to show yet...
+  - if @own_collections.empty? && @viewable_collections.empty? && @public_collections.empty?
+    .alert.alert-info No collections to show you yet...
+  - else
+    %h3 Your collections
+    - if @own_collections.empty?
+      .alert.alert-info You have no collections yet...
     - else
-        - @collections.each do |c|
-            = render partial: "collection", locals: {c: c}
+      - @own_collections.each do |c|
+        = render partial: "collection", locals: {c: c}
+    %h3 Collections shared with you
+    - if @viewable_collections.empty?
+      .alert.alert-info No collections shared with you yet..
+    - else
+      - @viewable_collections.each do |c|
+        = render partial: "collection", locals: {c: c}
+    %h3 Public collections
+    - if @public_collections.empty?
+      .alert.alert-info No public collections yet...
+    - else
+      - @public_collections.each do |c|
+        = render partial: "collection", locals: {c: c}

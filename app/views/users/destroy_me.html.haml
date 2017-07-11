@@ -1,0 +1,12 @@
+- content_for :userbox do
+  = render partial: "application/userbox", locals: {u: current_user}
+- content_for :title do
+  Delete your account
+%h2.text-danger Delete your account
+%p By deleting your account you will remove all of your link collections from LinkUniverse and you will lose access to the collections others shared with you. This operation is permanent. Do you really want to continue?
+%a.btn.btn-success{href: do_destroy_me_users_path, data: {method: 'delete'}}
+  = icon('check')
+  Yes, delete my account and all related data
+%a.btn.btn-danger{href: me_users_path}
+  = icon('times')
+  No, take me back to my profile

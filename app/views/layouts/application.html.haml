@@ -26,6 +26,7 @@
                 %span{'aria-hidden': :true}= icon('times')
               = flash[:error]
           = yield :userbox
+          = render partial: 'application/breadcrumbs'
           = yield
           %footer.text-center
             .row

@@ -1,7 +1,7 @@
 class LinkCollection < ActiveRecord::Base
   belongs_to :parent, class_name: "LinkCollection"
-  has_many :children, class_name: "LinkCollection"
-  has_many :links
+  has_many :children, class_name: "LinkCollection", dependent: :destroy
+  has_many :links, dependent: :destroy
   belongs_to :user
   has_and_belongs_to_many :viewers, class_name: "User"
   

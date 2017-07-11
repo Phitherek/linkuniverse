@@ -1,5 +1,4 @@
-Rails.application.routes.draw do
-  # The priority is based upon order of creation: first created -> highest priority.
+Rails.application.routes.draw do # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
@@ -53,18 +52,23 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-  
+
   root :to => "collections#index"
-  
+
   resources :users, only: [:show, :edit, :update] do
-      collection do
-          get 'login'
-          post 'login'
-          get 'register'
-          post 'register'
-          delete 'logout'
-      end
+    collection do
+      get 'login'
+      post 'login'
+      get 'register'
+      post 'register'
+      delete 'logout'
+      get 'me'
+      get 'edit_me'
+      patch 'update_me'
+      get 'destroy_me'
+      delete 'do_destroy_me'
+    end
   end
-  
+
   resources :collections, only: [:show]
 end

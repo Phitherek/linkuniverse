@@ -1,0 +1,35 @@
+- content_for :userbox do
+  = render partial: "application/userbox", locals: {u: current_user}
+- content_for :title do
+  Edit your profile
+%h2 Edit your profile
+%p Profile changes will take effect only when valid current password is given!
+= form_for current_user, url: update_me_users_path, method: :patch, html: { class: "form-horizontal" } do |f|
+  .form-group
+    .col-sm-4
+      = f.label :email, "Email:"
+      = f.email_field :email, class: "form-control"
+  .form-group
+    .col-sm-4
+      = f.label :username, "Username:"
+      = f.text_field :username, class: "form-control"
+  .form-group
+    .col-sm-4
+      = f.label :description, "Description:"
+      = f.text_area :description, rows: 10, class: "form-control"
+  .form-group
+    .col-sm-4
+      = f.label :password, "New password (leave blank if you don't want to change your password):"
+      = f.password_field :password, value: '', class: "form-control"
+  .form-group
+    .col-sm-4
+      = f.label :password_confirmation, "Confirm password:"
+      = f.password_field :password_confirmation, value: '', class: "form-control"
+  .form-group
+    .col-sm-4
+      = f.label :password, "Current password:"
+      = f.password_field :current_password, value: '', class: "form-control"
+  .form-group
+    .col-sm-4
+      = f.submit "Update profile", class: "btn btn-warning"
+      = link_to "Back", me_users_path, class: "btn btn-link"

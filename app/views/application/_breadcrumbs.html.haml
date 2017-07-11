@@ -1,0 +1,10 @@
+- if @breadcrumbs.any?
+  %ol.breadcrumb
+    - @breadcrumbs.each do |crumb|
+      - if @breadcrumbs.last == crumb
+        %li.active= crumb[:name]
+      - else
+        - if crumb.keys.include?(:url)
+          %li= link_to crumb[:name], crumb[:url]
+        - else
+          %li= crumb[:name]

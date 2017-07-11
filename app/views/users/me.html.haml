@@ -1,0 +1,18 @@
+- content_for :userbox do
+  = render partial: "application/userbox", locals: {u: current_user}
+- content_for :title do
+  Your profile
+%h2 Your profile
+%dl.dl-horizontal
+  %dt Username:
+  %dd= current_user.username
+  %dt Email:
+  %dd= current_user.email
+  %dt Description:
+  %dd= simple_format current_user.description
+%a.btn.btn-warning{href: edit_me_users_path}
+  = icon('edit')
+  Edit
+%a.btn.btn-danger{href: destroy_me_users_path}
+  = icon('times')
+  Delete

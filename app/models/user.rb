@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :collections, class_name: "LinkCollection"
+  has_many :collections, class_name: "LinkCollection", dependent: :destroy
   has_and_belongs_to_many :viewable_collections, class_name: "LinkCollection"
   has_secure_password
 
