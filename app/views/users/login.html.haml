@@ -1,12 +1,15 @@
 - content_for :title do
-    Login
+  Login
 %h2 Login
-= form_tag do
-    .row
-        = label_tag :email, "Email:"
-        = email_field_tag :email
-    .row
-        = label_tag :password, "Password:"
-        = password_field_tag :password
-    .row
-        = submit_tag "Login"
+= form_tag nil, class: "form-horizontal" do
+  .form-group
+    .col-sm-4
+      = label_tag :email, "Email:"
+      = email_field_tag :email, '', class: "form-control"
+  .form-group
+    .col-sm-4
+      = label_tag :password, "Password:"
+      = password_field_tag :password, '', class: "form-control"
+  .form-group
+    .col-sm-4
+      = submit_tag "Login", class: "btn btn-primary"

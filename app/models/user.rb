@@ -9,4 +9,5 @@ class User < ActiveRecord::Base
     
     scope :like, ->(q) { where("UPPER(username) LIKE UPPER('%#{q}%') OR UPPER(email) LIKE UPPER('%#{q}%')") }
 
+
 end
