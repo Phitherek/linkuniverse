@@ -1,6 +1,7 @@
 class Link < ActiveRecord::Base
   belongs_to :collection, class_name: "LinkCollection"
-  has_many :comments, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
+  has_many :votes, as: :voteable, dependent: :destroy
   
   before_save :ensure_correct_url, :ensure_title
   

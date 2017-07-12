@@ -3,7 +3,8 @@ class LinkCollection < ActiveRecord::Base
   has_many :children, class_name: "LinkCollection", dependent: :destroy
   has_many :links, dependent: :destroy
   belongs_to :user
-  has_and_belongs_to_many :viewers, class_name: "User"
+  has_many :link_collection_memberships, dependent: :destroy
+  has_many :votes, as: :voteable, dependent: :destroy
   
   validates :name, presence: true, uniqueness: { scope: :user, message: "should be unique for user" }
   

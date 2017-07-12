@@ -16,6 +16,6 @@ RSpec.describe User, :type => :model do
   it "should have associations" do
     u = FactoryGirl.create :user
     expect(u.respond_to?(:collections)).to eq(true)
-    expect(u.respond_to?(:viewable_collections)).to eq(true)
+    expect(u.respond_to?(:link_collection_memberships)).to eq(true)
   end
 end

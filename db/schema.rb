@@ -11,15 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170710142453) do
+ActiveRecord::Schema.define(version: 20170712113216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "comments", force: true do |t|
     t.text     "content"
-    t.integer  "link_id"
     t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "commentable_id"
+    t.string   "commentable_type"
+  end
+
+  create_table "link_collection_memberships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "link_collection_id"
+    t.string   "permission",         default: "view", null: false
+    t.boolean  "active",             default: false,  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -58,10 +68,11 @@ ActiveRecord::Schema.define(version: 20170710142453) do
 
   create_table "votes", force: true do |t|
     t.integer  "user_id"
-    t.integer  "link_id"
-    t.boolean  "positive",   default: true, null: false
+    t.boolean  "positive",      default: true, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "voteable_id"
+    t.string   "voteable_type"
   end
 
 end

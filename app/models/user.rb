@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   has_many :collections, class_name: "LinkCollection", dependent: :destroy
-  has_and_belongs_to_many :viewable_collections, class_name: "LinkCollection"
+  has_many :link_collection_memberships, dependent: :destroy
   has_secure_password
 
   validates :email, presence: true, uniqueness: true
@@ -11,6 +11,10 @@ class User < ActiveRecord::Base
 
   def self.find_by_username_or_email(key)
     User.where("email = ? OR username = ?", key, key).first
+  end
+
+  def viewable_collections
+    link_collection_memberships.where(active: true).collect { |m| m.link_collection }
   end
 
 end

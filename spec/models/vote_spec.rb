@@ -4,7 +4,7 @@ RSpec.describe Vote, :type => :model do
   it "should have associations" do
     v = FactoryGirl.create :vote
     expect(v.respond_to?(:user)).to eq(true)
-    expect(v.respond_to?(:link)).to eq(true)
+    expect(v.respond_to?(:voteable)).to eq(true)
   end
   
   it "should be positive by default" do

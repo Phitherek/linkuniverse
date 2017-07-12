@@ -43,6 +43,6 @@ RSpec.describe LinkCollection, :type => :model do
     expect(c.respond_to?(:children)).to eq(true)
     expect(c.respond_to?(:links)).to eq(true)
     expect(c.respond_to?(:user)).to eq(true)
-    expect(c.respond_to?(:viewers)).to eq(true)
+    expect(c.respond_to?(:link_collection_memberships)).to eq(true)
   end
 end
