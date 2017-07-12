@@ -26,4 +26,69 @@ class LinkCollection < ActiveRecord::Base
   def pub?
      self.pub
   end
+
+  def permission_for(user)
+    if pub?
+      permission = 'view'
+    else
+      permission = nil
+    end
+    permission_for_user = link_collection_memberships.where(user: user).first.try(:permission)
+    if permission_for_user.present?
+      better_permission(permission, permission_for_user)
+    else
+      if parent.present?
+        parent_permission_for_user = parent.permission_for(user)
+      else
+        parent_permission_for_user = nil
+      end
+      better_permission(permission, parent_permission_for_user)
+    end
+  end
+
+  def descriptive_permission_for(user)
+    case permission_for(user)
+    when nil
+      'None'
+    when 'view'
+      'View'
+    when 'vote'
+      'View, Vote'
+    when 'comment'
+      'View, Vote, Comment'
+    when 'edit'
+      'View, Vote, Comment, Edit'
+    end
+  end
+
+  private
+
+  def better_permission(p1, p2)
+    if p2.present?
+      case p2
+      when 'view'
+        if %w(vote comment edit).include?(p1)
+          p1
+        else
+          p2
+        end
+      when 'vote'
+        if %w(comment edit).include?(p1)
+          p1
+        else
+          p2
+        end
+      when 'comment'
+        if p1 == 'edit'
+          p1
+        else
+          p2
+        end
+      when 'edit'
+        p2
+      end
+    else
+      p1
+    end
+  end
 end
