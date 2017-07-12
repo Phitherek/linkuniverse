@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   end
 
   def viewable_collections
-    link_collection_memberships.where(active: true).collect { |m| m.link_collection }
+    link_collection_memberships.where(active: true).where.not(permission: nil).collect { |m| m.link_collection }
   end
 
 end

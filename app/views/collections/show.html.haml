@@ -1,0 +1,19 @@
+- content_for :title do
+  = @collection.name
+  by
+  = @collection.user.username
+- content_for :userbox do
+  = render partial: "application/userbox", locals: {u: current_user}
+%h2= @collection.name
+.description= simple_format @collection.description
+.collection
+  = render partial: 'collection_metadata', locals: {c: @collection}
+  - if @collection.user == current_user
+    .collection_actions
+      %h3 Collection actions
+      %a.btn.btn-warning{href: edit_collection_path(@collection)}
+        = icon('edit')
+        Edit
+      %a.btn.btn-danger{href: collection_path(@collection), data: {method: 'delete', confirm: 'Do you really want to delete this collection and all associated links and subcollections?'}}
+        = icon('times')
+        Delete

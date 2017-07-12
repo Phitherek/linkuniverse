@@ -1,12 +1,13 @@
 class LinkCollection < ActiveRecord::Base
   belongs_to :parent, class_name: "LinkCollection"
-  has_many :children, class_name: "LinkCollection", dependent: :destroy
-  has_many :links, dependent: :destroy
+  has_many :children, class_name: "LinkCollection", dependent: :destroy, foreign_key: :parent_id
+  has_many :links, foreign_key: :collection_id, dependent: :destroy
   belongs_to :user
   has_many :link_collection_memberships, dependent: :destroy
   has_many :votes, as: :voteable, dependent: :destroy
   
   validates :name, presence: true, uniqueness: { scope: :user, message: "should be unique for user" }
+  validates :user_id, presence: true
   
   default_scope { where(pub: false) }
   scope :pub, -> { unscoped.where(pub: true) }
@@ -28,6 +29,9 @@ class LinkCollection < ActiveRecord::Base
   end
 
   def permission_for(user)
+    if user == self.user
+      return 'owner'
+    end
     if pub?
       permission = 'view'
     else
@@ -58,7 +62,13 @@ class LinkCollection < ActiveRecord::Base
       'View, Vote, Comment'
     when 'edit'
       'View, Vote, Comment, Edit'
+    when 'owner'
+      'Owner'
     end
+  end
+
+  def link_handle
+    id.to_s + '-' + name.parameterize
   end
 
   private

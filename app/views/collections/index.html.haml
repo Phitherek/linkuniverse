@@ -7,8 +7,8 @@
   - if @collections.empty?
     .alert.alert-info No public collections yet...
   - else
-    - @collections.each do |c|
-      = render partial: "collection", locals: {c: c}
+    - while @collections.count > 0
+      = render partial: "collection_row", locals: { cs: @collections.pop(3) }
 - else
   - if @own_collections.empty? && @viewable_collections.empty? && @public_collections.empty?
     .alert.alert-info No collections to show you yet...
@@ -17,20 +17,20 @@
     - if @own_collections.empty?
       .alert.alert-info You have no collections yet...
     - else
-      - @own_collections.each do |c|
-        = render partial: "collection", locals: {c: c}
+      - while @own_collections.count > 0
+        = render partial: "collection_row", locals: { cs: @own_collections.pop(3) }
     %h3 Collections shared with you
     - if @viewable_collections.empty?
       .alert.alert-info No collections shared with you yet..
     - else
-      - @viewable_collections.each do |c|
-        = render partial: "collection", locals: {c: c}
+      - while @viewable_collections.count > 0
+        = render partial: "collection_row", locals: { cs: @viewable_collections.pop(3) }
     %h3 Public collections
     - if @public_collections.empty?
       .alert.alert-info No public collections yet...
     - else
-      - @public_collections.each do |c|
-        = render partial: "collection", locals: {c: c}
+      - while @public_collections.count > 0
+        = render partial: "collection_row", locals: { cs: @public_collections.pop(3) }
   %a.btn.btn-success{href: new_collection_path}
     = icon('plus')
     Add collection

@@ -1,10 +1,4 @@
 .collection
-    = link_to c.name, collection_path(c), class: :name
-    %p.author
-        By:
-        = link_to c.user.username, user_path(c.user)
-    %p.stats
-        = c.links.count
-        links,
-        = c.children.count
-        subcategories
+    %h2= link_to c.name, collection_path(c.link_handle), class: :name
+    .description= simple_format c.description
+    = render partial: 'collection_metadata', locals: {c: c}

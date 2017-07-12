@@ -70,5 +70,11 @@ Rails.application.routes.draw do # The priority is based upon order of creation:
     end
   end
 
-  resources :collections, only: [:new, :show]
+  resources :collections do
+    collection do
+      get 'own'
+      get 'shared'
+      get 'public'
+    end
+  end
 end

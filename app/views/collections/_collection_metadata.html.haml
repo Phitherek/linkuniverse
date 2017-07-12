@@ -1,0 +1,22 @@
+%small.meta
+  .author= link_to c.user.username, user_path(c.user.username)
+  .separator= '|'
+  .stats
+    = c.links.count
+    links,
+    = c.children.count
+    subcollections
+  .separator= '|'
+  .privpub
+    = c.pub? ? 'Public' : 'Private'
+  .separator= '|'
+  .parent
+    - if c.parent.present?
+      Parent collection:
+      = link_to c.parent.name, collection_path(c.parent.link_handle)
+    - else
+      Parent collection: None
+  .separator= '|'
+  .permissions
+    Your permissions:
+    = c.descriptive_permission_for(current_user)

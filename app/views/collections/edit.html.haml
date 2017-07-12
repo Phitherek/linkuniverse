@@ -1,9 +1,12 @@
+- content_for :title do
+  Editing:
+  = @collection.name
 - content_for :userbox do
   = render partial: "application/userbox", locals: {u: current_user}
-- content_for :title do
-  New collection
-%h2 New collection
-= form_for @collection, url: collections_path, html: {class: 'form-horizontal'} do |f|
+%h2
+  Editing:
+  = @collection.name
+= form_for @collection, url: collection_path(@collection), html: {class: 'form-horizontal'} do |f|
   .form-group
     .col-sm-4
       = f.label :name, 'Name:'
@@ -24,4 +27,4 @@
           Public?
   .form-group
     .col-sm-4
-      = submit_tag 'Create new collection', class: 'btn btn-success'
+      = submit_tag 'Update collection', class: 'btn btn-warning'

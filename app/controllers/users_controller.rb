@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
 
   before_filter :find_user, except: [:login, :logout, :register, :me, :edit_me, :update_me, :destroy_me, :do_destroy_me]
-  before_filter :ensure_owner, only: [:edit, :update]
 
   def login
     add_breadcrumb 'Home', root_path
@@ -101,16 +100,7 @@ class UsersController < ApplicationController
   end
 
   def find_user
-    begin
-      @user = User.find(params[:id])
-    rescue ActiveRecord::RecordNotFound => e
-      render_error :notfound
-    end
-  end
-
-  def ensure_owner
-    if @user != current_user
-      render_error :forbidden
-    end
+      @user = User.find_by_username(params[:id])
+      render_error :notfound if @user.blank?
   end
 end
