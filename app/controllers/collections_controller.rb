@@ -48,7 +48,14 @@ class CollectionsController < ApplicationController
     id = params[:id].split('-')[0].to_i
     begin
       @collection = LinkCollection.unscoped.find(id)
-      if @collection.user == current_user
+      if current_user.blank?
+        if @collection.pub?
+          add_breadcrumb 'Public collections', public_collections_path
+          add_breadcrumb @collection.name
+        else
+          render_error :forbidden
+        end
+      elsif @collection.user == current_user
         add_breadcrumb 'Your collections', own_collections_path
         add_breadcrumb @collection.name
       elsif @collection.permission_for(current_user).present?
