@@ -1,0 +1,24 @@
+- content_for :userbox do
+  = render partial: "application/userbox", locals: {u: current_user}
+- content_for :title do
+  Add link to collection #{@collection.name} by #{@collection.user.username}
+%h2 Add link to collection #{@collection.name} by #{@collection.user.username}
+= form_for @link, url: collection_links_path(@collection.link_handle), html: { class: 'form-horizontal' } do |f|
+  .form-group
+    .col-sm-4
+      = f.label :url, 'URL:'
+      = f.text_field :url, class: 'form-control'
+  .form-group
+    .col-sm-4
+      = f.label :title, 'Title (automatically resolves if empty):'
+      .input-group
+        = f.text_field :title, class: 'form-control'
+        .input-group-addon
+          %a.title-on-the-fly{href: '#', title: 'Resolve title now', data: {collection_handle: @collection.link_handle}}= icon 'arrow-down'
+  .form-group
+    .col-sm-4
+      = f.label :description, 'Description:'
+      = f.text_area :description, rows: 5, class: 'form-control'
+  .form-group
+    .col-sm-4
+      = submit_tag 'Add link', class: 'btn btn-success'

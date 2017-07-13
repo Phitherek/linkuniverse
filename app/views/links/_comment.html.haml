@@ -1,0 +1,13 @@
+.comment{data: {id: c.id, link_id: c.commentable.id, collection_handle: c.commentable.collection.link_handle}}
+  .content= simple_format c.content
+  %small.meta
+    .user= link_to c.user.username, user_path(c.user)
+    - if c.updated_at > c.created_at
+      .separator= '|'
+      .edited Edited
+    - if c.user == current_user || c.commentable.user == current_user || c.commentable.collection.user == current_user || c.commentable.collection.permission_for(current_user) == 'edit'
+      .separator= '|'
+      = link_to 'Edit', '#', class: 'text-warning edit-comment'
+      .separator= '|'
+      = link_to 'Delete', '#', class: 'text-danger delete-comment'
+

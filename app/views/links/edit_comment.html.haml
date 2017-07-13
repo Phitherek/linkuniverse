@@ -1,0 +1,7 @@
+= form_tag comment_collection_link_path(@collection.link_handle, @link.id), method: :patch, class: 'form-horizontal update-comment-form' do
+  .form-group
+    .col-sm-12
+      = text_area_tag :content, '', rows: 5, placeholder: 'Write a comment...', class: 'form-control'
+  .form-group
+    .col-sm-12
+      = submit_tag 'Update comment', class: 'btn btn-warning update-comment'

@@ -1,0 +1,8 @@
+.score
+  - if %w(vote comment edit owner).include?(@link.collection.permission_for(current_user))
+    %a.upvote{href: '#', title: 'Upvote', data: {link_id: @link.id, collection_handle: @collection.link_handle}}= @link.votes.find_by(user: current_user).try(:positive?) ? icon('thumbs-up') : icon('thumbs-o-up')
+    %span.value= @link.score
+    %a.downvote{href: '#', title: 'Downvote', data: {link_id: @link.id, collection_handle: @collection.link_handle}}= @link.votes.find_by(user: current_user).try(:negative?) ? icon('thumbs-down') : icon('thumbs-o-down')
+  - else
+    Score:
+    = @link.score

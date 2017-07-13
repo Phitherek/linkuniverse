@@ -15,17 +15,25 @@ class Link < ActiveRecord::Base
   
   def fetch_title!
     t = nil
-    if HTTParty.head(self.url).content_type == "text/html"
-      HTTParty.get(self.url).lines.each do |line|
-        if line.include?("<title")
-          t = line
-          t.gsub!(/<\/?title[A-z0-9"= -]*>/, "").chomp!
-          break
+    begin
+      if HTTParty.head(self.url).content_type == "text/html"
+        HTTParty.get(self.url).lines.each do |line|
+          /(<title[^>]*>|<TITLE[^>]*>)(.*)(<\/title>|<\/TITLE>)/.match(line) do |md|
+            t = md[2] if t.blank?
+          end
         end
       end
+    rescue
+      t = nil
     end
     self.title = t if !t.nil? && !t.empty?
   end
+
+  def score
+    votes.positive.count - votes.negative.count
+  end
+
+  private
   
   def ensure_title
     if self.title.nil? || self.title.empty?

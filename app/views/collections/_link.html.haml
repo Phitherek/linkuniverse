@@ -1,8 +1,26 @@
-.link
+.collection-link
   .href
     = link_to l.title, l.url
   %small.url= l.url
   .description
     = simple_format l.description
   %small.meta
-    = link_to l.user.username, user_path(l.user.username)
+    .user= link_to l.user.username, user_path(l.user.username)
+    .separator= '|'
+    .score
+      - if %w(vote comment edit owner).include?(l.collection.permission_for(current_user))
+        %a.upvote{href: '#', title: 'Upvote', data: {link_id: l.id, collection_handle: @collection.link_handle}}= l.votes.find_by(user: current_user).try(:positive?) ? icon('thumbs-up') : icon('thumbs-o-up')
+        %span.value= l.score
+        %a.downvote{href: '#', title: 'Downvote', data: {link_id: l.id, collection_handle: @collection.link_handle}}= l.votes.find_by(user: current_user).try(:negative?) ? icon('thumbs-down') : icon('thumbs-o-down')
+      - else
+        Score:
+        = l.score
+    .separator= '|'
+    .comments
+      = icon('comments-o')
+      = l.comments.count
+    - if current_user == l.user || current_user == l.collection.user
+      .separator= '|'
+      = link_to 'Edit', edit_collection_link_path(l.collection.link_handle, l.id), class: 'text-warning'
+      .separator= '|'
+      = link_to 'Delete', collection_link_path(l.collection.link_handle, l.id), data: {method: 'delete', confirm: 'Do you really want to delete this link?'}, class: 'text-danger'

@@ -1,0 +1,47 @@
+- content_for :userbox do
+  = render partial: "application/userbox", locals: {u: current_user}
+- content_for :title do
+  #{@link.title} in collection #{@collection.name} by #{@collection.user.username}
+.collection-link
+  .href
+    = link_to @link.title, @link.url
+  %small.url= @link.url
+  .description
+    = simple_format @link.description
+  %small.meta
+    .user= link_to @link.user.username, user_path(@link.user.username)
+    .separator= '|'
+    .score
+      - if %w(vote comment edit owner).include?(@link.collection.permission_for(current_user))
+        %a.upvote{href: '#', title: 'Upvote', data: {link_id: @link.id, collection_handle: @collection.link_handle}}= @link.votes.find_by(user: current_user).try(:positive?) ? icon('thumbs-up') : icon('thumbs-o-up')
+        %span.value= @link.score
+        %a.downvote{href: '#', title: 'Downvote', data: {link_id: @link.id, collection_handle: @collection.link_handle}}= @link.votes.find_by(user: current_user).try(:negative?) ? icon('thumbs-down') : icon('thumbs-o-down')
+      - else
+        Score:
+        = @link.score
+    .separator= '|'
+    .comments
+      = icon('comments-o')
+      = @link.comments.count
+    - if current_user == @link.user || current_user == @link.collection.user
+      .separator= '|'
+      = link_to 'Edit', edit_collection_link_path(@link.collection.link_handle, @link.id), class: 'text-warning'
+      .separator= '|'
+      = link_to 'Delete', collection_link_path(@link.collection.link_handle, @link.id), data: {method: 'delete', confirm: 'Do you really want to delete this link?'}, class: 'text-danger'
+.row
+  .col-sm-4
+    .collection-link-comments
+      %h4 Comments
+      - if @link.comments.empty?
+        .alert.alert-info No comments yet...
+      - else
+        - @link.comments.each do |comment|
+          = render partial: 'comment', locals: {c: comment}
+      - if @link.user == current_user || @link.collection.user == current_user || %w(comment edit owner).include?(@collection.permission_for(current_user))
+        = form_tag add_comment_collection_link_path(@collection.link_handle, @link.id), class: 'form-horizontal' do
+          .form-group
+            .col-sm-12
+              = text_area_tag :content, '', rows: 5, placeholder: 'Write a comment...', class: 'form-control'
+          .form-group
+            .col-sm-12
+              = submit_tag 'Add comment', class: 'btn btn-success'

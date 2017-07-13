@@ -31,6 +31,6 @@
     - @collection.links.each do |link|
       = render partial: 'link', locals: {l: link}
   - if @collection.user == current_user || @collection.permission_for(current_user) == 'edit'
-    %a.btn.btn-success.add-link
+    %a.btn.btn-success.add-link{href: new_collection_link_path(@collection.link_handle)}
       = icon 'plus'
       Add link

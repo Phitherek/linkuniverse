@@ -80,5 +80,18 @@ Rails.application.routes.draw do # The priority is based upon order of creation:
       patch 'upvote'
       patch 'downvote'
     end
+    resources :links, except: [:index] do
+      member do
+        post 'add_comment'
+        get 'edit_comment'
+        patch 'update_comment'
+        delete 'destroy_comment'
+        patch 'upvote'
+        patch 'downvote'
+      end
+      collection do
+        get 'title_on_the_fly'
+      end
+    end
   end
 end
