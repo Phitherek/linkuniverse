@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :collections, class_name: "LinkCollection", dependent: :destroy
   has_many :link_collection_memberships, dependent: :destroy
+  has_many :links, dependent: :destroy
   has_secure_password
 
   validates :email, presence: true, uniqueness: true

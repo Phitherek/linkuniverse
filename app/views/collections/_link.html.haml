@@ -1,0 +1,8 @@
+.link
+  .href
+    = link_to l.title, l.url
+  %small.url= l.url
+  .description
+    = simple_format l.description
+  %small.meta
+    = link_to l.user.username, user_path(l.user.username)

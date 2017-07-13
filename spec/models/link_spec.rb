@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Link, :type => :model do
+
+  it { is_expected.to validate_presence_of(:collection_id) }
+
+  it { is_expected.to validate_presence_of(:user_id) }
+
   it "should resolve title if empty title given" do
     l = FactoryGirl.build :link
     expect {l.save!}.not_to raise_error

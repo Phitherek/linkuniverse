@@ -2,8 +2,13 @@
   .author= link_to c.user.username, user_path(c.user.username)
   .separator= '|'
   .score
-    Score:
-    = c.score
+    - if %w(vote comment edit owner).include?(c.permission_for(current_user))
+      %a.upvote{href: '#', title: 'Upvote', data: {collection_id: c.id}}= c.votes.find_by(user: current_user).try(:positive?) ? icon('thumbs-up') : icon('thumbs-o-up')
+      %span.value= c.score
+      %a.downvote{href: '#', title: 'Downvote', data: {collection_id: c.id}}= c.votes.find_by(user: current_user).try(:negative?) ? icon('thumbs-down') : icon('thumbs-o-down')
+    - else
+      Score:
+      = c.score
   .separator= '|'
   .stats
     = succeed ',' do

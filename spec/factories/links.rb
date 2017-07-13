@@ -4,6 +4,8 @@ FactoryGirl.define do
   factory :link do
     description "Test"
     url "https://rff-converter.phitherek.me"
+    association :user
+    association :collection, factory: :link_collection
     factory :filled_title_link do
       title "Other title"
     end

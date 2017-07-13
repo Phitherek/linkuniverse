@@ -9,8 +9,8 @@ class LinkCollection < ActiveRecord::Base
   validates :name, presence: true, uniqueness: { scope: :user, message: "should be unique for user" }
   validates :user_id, presence: true
   
-  default_scope { where(pub: false) }
-  scope :pub, -> { unscoped.where(pub: true) }
+  default_scope { where(pub: false).order(updated_at: :desc) }
+  scope :pub, -> { unscoped.where(pub: true).order(updated_at: :desc) }
   scope :like, ->(q) { where("UPPER(name) LIKE UPPER('%#{q}%')") }
   scope :toplevel, -> { where(parent: nil) }
   

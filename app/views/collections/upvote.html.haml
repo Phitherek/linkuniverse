@@ -1,0 +1,7 @@
+- if %w(vote comment edit owner).include?(@collection.permission_for(current_user))
+  %a.upvote{href: '#', title: 'Upvote', data: {collection_id: @collection.id}}= @collection.votes.find_by(user: current_user).try(:positive?) ? icon('thumbs-up') : icon('thumbs-o-up')
+  %span.value= @collection.score
+  %a.downvote{href: '#', title: 'Downvote', data: {collection_id: @collection.id}}= @collection.votes.find_by(user: current_user).try(:negative?) ? icon('thumbs-down') : icon('thumbs-o-down')
+- else
+  Score:
+  = @collection.score

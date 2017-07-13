@@ -1,5 +1,6 @@
 class Link < ActiveRecord::Base
   belongs_to :collection, class_name: "LinkCollection"
+  belongs_to :user
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :votes, as: :voteable, dependent: :destroy
   
@@ -7,6 +8,8 @@ class Link < ActiveRecord::Base
   
   validates :url, uniqueness: { scope: :collection, message: "should be unique inside collection" }
   validates :title, uniqueness: { scope: :collection, message: "should be unique inside collection" }
+  validates :collection_id, presence: true
+  validates :user_id, presence: true
   
   scope :like, ->(q) { where("UPPER(title) LIKE UPPER('%#{q}%') OR UPPER(url) LIKE UPPER('%#{q}%')") }
   

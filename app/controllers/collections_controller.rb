@@ -1,32 +1,32 @@
 class CollectionsController < ApplicationController
-  before_action :find_collection, only: [:edit, :update, :destroy]
+  before_action :find_collection, only: [:edit, :update, :destroy, :upvote, :downvote]
   before_action :require_current_user, except: [:index, :public, :show]
 
   def index
     if current_user.nil?
       @collections = LinkCollection.pub.toplevel.limit(9).to_a
     else
-      @own_collections = current_user.collections.unscoped.toplevel.limit(9).to_a
-      @viewable_collections = current_user.viewable_collections.select { |c| c.parent == nil }.first(9)
+      @own_collections = current_user.collections.unscoped.toplevel.limit(9).order(updated_at: :desc).to_a
+      @viewable_collections = current_user.viewable_collections.select { |c| c.parent == nil }.sort { |c1, c2| c2.updated_at <=> c1.updated_at }.first(9)
       @public_collections = LinkCollection.pub.toplevel.limit(9).to_a
     end
     add_breadcrumb 'Home'
   end
 
   def own
-    @own_collections = current_user.collections.unscoped.toplevel.to_a
+    @own_collections = current_user.collections.unscoped.toplevel.order(updated_at: :desc).to_a
     add_breadcrumb 'Home', root_path
     add_breadcrumb 'Your collections'
   end
 
   def shared
-    @viewable_collections = current_user.viewable_collections.select { |c| c.parent == nil }
+    @viewable_collections = current_user.viewable_collections.select { |c| c.parent == nil }.sort { |c1, c2| c2.updated_at <=> c1.updated_at }
     add_breadcrumb 'Home', root_path
     add_breadcrumb 'Collections shared with you'
   end
 
   def public
-    @public_collections = LinkCollection.pub.toplevel.to_a
+    @public_collections = LinkCollection.pub.toplevel.order(updated_at: :desc).to_a
     add_breadcrumb 'Home', root_path
     add_breadcrumb 'Public collections'
   end
@@ -105,6 +105,38 @@ class CollectionsController < ApplicationController
       flash[:error] = 'Could not delete collection!'
     end
     redirect_to own_collections_url
+  end
+
+  def upvote
+    if %w(vote comment edit owner).include?(@collection.permission_for(current_user))
+      @vote = Vote.find_by(voteable: @collection, user: current_user)
+      if @vote.present?
+        if @vote.positive?
+          @vote.destroy
+        else
+          @vote.positivize!
+        end
+      else
+        @vote = Vote.create(voteable: @collection, user: current_user, positive: true)
+      end
+    end
+    render layout: false
+  end
+
+  def downvote
+    if %w(vote comment edit owner).include?(@collection.permission_for(current_user))
+      @vote = Vote.find_by(voteable: @collection, user: current_user)
+      if @vote.present?
+        if @vote.negative?
+          @vote.destroy
+        else
+          @vote.negativize!
+        end
+      else
+        @vote = Vote.create(voteable: @collection, user: current_user, positive: false)
+      end
+    end
+    render layout: false
   end
 
   private

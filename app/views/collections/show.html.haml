@@ -26,3 +26,11 @@
       - else
         - LinkCollection.pub.where(parent: @collection).each do |sc|
           = render partial: 'collection', locals: {c: sc}
+  .links
+    %h3 Links
+    - @collection.links.each do |link|
+      = render partial: 'link', locals: {l: link}
+  - if @collection.user == current_user || @collection.permission_for(current_user) == 'edit'
+    %a.btn.btn-success.add-link
+      = icon 'plus'
+      Add link
