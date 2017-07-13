@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 
-  before_filter :find_user, except: [:login, :logout, :register, :me, :edit_me, :update_me, :destroy_me, :do_destroy_me]
+  before_action :find_user, except: [:login, :logout, :register, :me, :edit_me, :update_me, :destroy_me, :do_destroy_me]
+  before_action :require_current_user, except: [:register, :login, :show]
 
   def login
     add_breadcrumb 'Home', root_path

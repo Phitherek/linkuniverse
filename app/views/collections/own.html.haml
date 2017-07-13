@@ -1,0 +1,10 @@
+- content_for :title do
+  Your collections
+- content_for :userbox do
+  = render partial: "application/userbox", locals: {u: current_user}
+= render partial: 'own_collections'
+.row.add-collection-btn
+  .col-sm-12
+    %a.btn.btn-success{href: new_collection_path}
+      = icon('plus')
+      Add collection

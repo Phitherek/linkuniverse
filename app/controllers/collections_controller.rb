@@ -1,5 +1,6 @@
 class CollectionsController < ApplicationController
   before_action :find_collection, only: [:edit, :update, :destroy]
+  before_action :require_current_user, except: [:index, :public, :show]
 
   def index
     if current_user.nil?
@@ -13,15 +14,21 @@ class CollectionsController < ApplicationController
   end
 
   def own
-
+    @own_collections = current_user.collections.unscoped.toplevel.to_a
+    add_breadcrumb 'Home', root_path
+    add_breadcrumb 'Your collections'
   end
 
   def shared
-
+    @viewable_collections = current_user.viewable_collections.select { |c| c.parent == nil }
+    add_breadcrumb 'Home', root_path
+    add_breadcrumb 'Collections shared with you'
   end
 
   def public
-
+    @public_collections = LinkCollection.pub.toplevel.to_a
+    add_breadcrumb 'Home', root_path
+    add_breadcrumb 'Public collections'
   end
 
   def new

@@ -1,11 +1,14 @@
 %small.meta
   .author= link_to c.user.username, user_path(c.user.username)
   .separator= '|'
+  .score
+    Score:
+    = c.score
+  .separator= '|'
   .stats
-    = c.links.count
-    links,
-    = c.children.count
-    subcollections
+    = succeed ',' do
+      = pluralize(c.links.count, 'link')
+    = pluralize(c.children_count_for(current_user), 'subcollection')
   .separator= '|'
   .privpub
     = c.pub? ? 'Public' : 'Private'

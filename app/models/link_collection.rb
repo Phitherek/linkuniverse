@@ -71,6 +71,18 @@ class LinkCollection < ActiveRecord::Base
     id.to_s + '-' + name.parameterize
   end
 
+  def children_count_for(user)
+    if self.user == user || (link_collection_memberships.where(user: user).first.present? && link_collection_memberships.where(user: user).first.permission.present?)
+      LinkCollection.unscoped.where(parent: self).count
+    else
+      LinkCollection.pub.where(parent: self).count
+    end
+  end
+
+  def score
+    votes.positive.count - votes.negative.count
+  end
+
   private
 
   def better_permission(p1, p2)

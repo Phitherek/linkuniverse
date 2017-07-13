@@ -17,3 +17,12 @@
       %a.btn.btn-danger{href: collection_path(@collection), data: {method: 'delete', confirm: 'Do you really want to delete this collection and all associated links and subcollections?'}}
         = icon('times')
         Delete
+  - if @collection.children_count_for(current_user) > 0
+    .subcollections
+      %h3 Subcollections
+      - if @collection.user == current_user || (@collection.link_collection_memberships.where(user: current_user).first.present? && @collection.link_collection_memberships.where(user: current_user).first.permission.present?)
+        - LinkCollection.unscoped.where(parent: @collection).each do |sc|
+          = render partial: 'collection', locals: {c: sc}
+      - else
+        - LinkCollection.pub.where(parent: @collection).each do |sc|
+          = render partial: 'collection', locals: {c: sc}

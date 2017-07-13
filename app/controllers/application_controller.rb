@@ -13,9 +13,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  private
+  protected
 
   def initialize_breadcrumbs
     @breadcrumbs = []
+  end
+
+  def require_current_user
+    if current_user.blank?
+      render_error :forbidden
+    end
   end
 end

@@ -1,0 +1,6 @@
+%h3 Collections shared with you
+- if @viewable_collections.empty?
+  .alert.alert-info No collections shared with you yet..
+- else
+  - while @viewable_collections.count > 0
+    = render partial: "collection_row", locals: { cs: @viewable_collections.pop(3) }
