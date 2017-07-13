@@ -14,9 +14,9 @@
     = c.pub? ? 'Public' : 'Private'
   .separator= '|'
   .parent
-    - if c.parent.present?
+    - if c.parent_for(current_user).present?
       Parent collection:
-      = link_to c.parent.name, collection_path(c.parent.link_handle)
+      = link_to c.parent_for(current_user).name, collection_path(c.parent_for(current_user).link_handle)
     - else
       Parent collection: None
   .separator= '|'

@@ -79,6 +79,20 @@ class LinkCollection < ActiveRecord::Base
     end
   end
 
+  def parent_for(user)
+    parent = LinkCollection.unscoped.find_by_id(parent_id)
+    return nil unless parent.present?
+    if parent.pub?
+      parent
+    else
+      if parent.user == user || (parent.link_collection_memberships.where(user: user).first.present? && parent.link_collection_memberships.where(user: user).first.permission.present?)
+        parent
+      else
+        nil
+      end
+    end
+  end
+
   def score
     votes.positive.count - votes.negative.count
   end
