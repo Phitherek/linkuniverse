@@ -66,7 +66,7 @@ class LinksController < ApplicationController
     if @link.update(link_params)
       flash[:notice] = 'Link updated successfully!'
       @collection.touch
-      redirect_to collection_link_url(@collection.link_handle, @link.id)
+      redirect_to collection_url(@collection.link_handle)
     else
       flash[:notice] = "Could not update link: #{@link.errors.full_messages.join(',')}!"
       redirect_to edit_collection_link_url(@collection.link_handle, @link.id)
