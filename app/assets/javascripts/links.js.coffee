@@ -13,7 +13,7 @@ $(document).on 'click', 'a.title-on-the-fly', (e) ->
   $.ajax
     type: 'GET'
     url: '/collections/' + collectionHandle + '/links/title_on_the_fly'
-    data: { link_url: url }
+    data: {link_url: url}
     success: (data) ->
       titleInput.val(data)
 
@@ -38,3 +38,84 @@ $(document).on 'click', '.collection-link .meta .score .downvote', (e) ->
     url: '/collections/' + collectionHandle + '/links/' + linkId + '/downvote'
     success: (data) ->
       target.closest('.score').html(data)
+
+$(document).on 'click', '.collection-link-comments .btn.add-comment', (e) ->
+  e.preventDefault()
+  target = $(this)
+  form = target.closest('form')
+  content = form.find('textarea[name="content"]').val()
+  container = $('.collection-link-comments')
+  $.ajax
+    type: 'POST'
+    url: form.attr('action')
+    data: {content: content}
+    success: (data) ->
+      container.html(data)
+      $.ajax
+        type: 'GET'
+        url: form.attr('action').replace('add_comment', 'comment_count')
+        success: (data) ->
+          $('.collection-link small.meta .comments').html(data)
+
+$(document).on 'click', '.collection-link-comments .comment a.edit-comment', (e) ->
+  e.preventDefault()
+  target = $(this)
+  comment = target.closest('.comment')
+  collectionHandle = comment.data('collection-handle')
+  linkId = comment.data('link-id')
+  id = comment.data('id')
+  $.ajax
+    type: 'GET'
+    url: '/collections/' + collectionHandle + '/links/' + linkId + '/edit_comment'
+    data: {comment_id: id}
+    success: (data) ->
+      comment.html(data)
+
+$(document).on 'click', '.collection-link-comments .comment a.cancel-edit-comment', (e) ->
+  e.preventDefault()
+  target = $(this)
+  comment = target.closest('.comment')
+  collectionHandle = comment.data('collection-handle')
+  linkId = comment.data('link-id')
+  id = comment.data('id')
+  $.ajax
+    type: 'GET'
+    url: '/collections/' + collectionHandle + '/links/' + linkId + '/cancel_edit_comment'
+    data: {comment_id: id}
+    success: (data) ->
+      comment.replaceWith(data)
+
+$(document).on 'click', '.collection-link-comments .comment .btn.update-comment', (e) ->
+  e.preventDefault()
+  target = $(this)
+  form = target.closest('form')
+  content = form.find('textarea[name="content"]').val()
+  comment = target.closest('.comment')
+  collectionHandle = comment.data('collection-handle')
+  linkId = comment.data('link-id')
+  id = comment.data('id')
+  $.ajax
+    type: 'PATCH'
+    url: '/collections/' + collectionHandle + '/links/' + linkId + '/update_comment'
+    data: {comment_id: id, content: content}
+    success: (data) ->
+      comment.replaceWith(data)
+
+$(document).on 'click', '.collection-link-comments .comment a.delete-comment', (e) ->
+  e.preventDefault()
+  target = $(this)
+  comment = target.closest('.comment')
+  collectionHandle = comment.data('collection-handle')
+  linkId = comment.data('link-id')
+  id = comment.data('id')
+  $.ajax
+    type: 'DELETE'
+    url: '/collections/' + collectionHandle + '/links/' + linkId + '/destroy_comment'
+    data: {comment_id: id}
+    success: (data) ->
+      $('.collection-link-comments').html(data)
+      $.ajax
+        type: 'GET'
+        url: '/collections/' + collectionHandle + '/links/' + linkId + '/comment_count'
+        success: (data) ->
+          $('.collection-link small.meta .comments').html(data)

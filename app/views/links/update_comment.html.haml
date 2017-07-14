@@ -1,14 +1,1 @@
-%h4 Comments
-- if @link.comments.empty?
-  .alert.alert-info No comments yet...
-- else
-  - @link.comments.each do |comment|
-    = render partial: 'comment', locals: {c: comment}
-- if @link.user == current_user || @link.collection.user == current_user || %w(comment edit owner).include?(@collection.permission_for(current_user))
-  = form_tag add_comment_collection_link_path(@collection.link_handle, @link.id), class: 'form-horizontal' do
-    .form-group
-      .col-sm-12
-        = text_area_tag :content, '', rows: 5, placeholder: 'Write a comment...', class: 'form-control'
-    .form-group
-      .col-sm-12
-        = submit_tag 'Add comment', class: 'btn btn-success'
+= render partial: 'comment', locals: {c: @comment}

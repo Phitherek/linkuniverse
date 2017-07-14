@@ -1,7 +1,8 @@
-= form_tag comment_collection_link_path(@collection.link_handle, @link.id), method: :patch, class: 'form-horizontal update-comment-form' do
+= form_tag update_comment_collection_link_path(@collection.link_handle, @link.id), method: :patch, class: 'form-horizontal update-comment-form' do
   .form-group
     .col-sm-12
-      = text_area_tag :content, '', rows: 5, placeholder: 'Write a comment...', class: 'form-control'
+      = text_area_tag :content, @comment.content, rows: 5, placeholder: 'Write a comment...', class: 'form-control'
   .form-group
     .col-sm-12
       = submit_tag 'Update comment', class: 'btn btn-warning update-comment'
+      = link_to 'Cancel edit comment', '#', class: 'btn btn-link cancel-edit-comment'

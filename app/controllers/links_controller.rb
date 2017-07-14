@@ -26,7 +26,7 @@ class LinksController < ApplicationController
     if @link.persisted?
       flash[:notice] = 'Link created successfully!'
       @collection.touch
-      redirect_to collection_link_url(@collection.link_handle, @link.id)
+      redirect_to collection_url(@collection.link_handle)
     else
       flash[:error] = "Could not create link: #{@link.errors.full_messages.join(', ')}"
       redirect_to new_collection_link_url(@collection.link_handle)
@@ -116,23 +116,46 @@ class LinksController < ApplicationController
   end
 
   def add_comment
-
+    @comment = @link.comments.create(user: current_user, content: params[:content])
+    render layout: false
   end
 
   def edit_comment
-
+    begin
+      @comment = @link.comments.find(params[:comment_id])
+      render layout: false
+    rescue ActiveRecord::RecordNotFound
+      render nothing: true
+    end
   end
 
   def cancel_edit_comment
-
+    begin
+      @comment = @link.comments.find(params[:comment_id])
+      render layout: false
+    rescue ActiveRecord::RecordNotFound
+      render nothing: true
+    end
   end
 
   def update_comment
-
+    begin
+      @comment = @link.comments.find(params[:comment_id])
+      @comment.update(content: params[:content])
+      render layout: false
+    rescue ActiveRecord::RecordNotFound
+      render layout: false
+    end
   end
 
   def destroy_comment
-
+    begin
+      @comment = @link.comments.find(params[:comment_id])
+      @comment.destroy
+      render layout: false
+    rescue ActiveRecord::RecordNotFound
+      render layout: false
+    end
   end
 
   def title_on_the_fly
@@ -143,6 +166,10 @@ class LinksController < ApplicationController
     else
       render text: tmp_link.url
     end
+  end
+
+  def comment_count
+    render layout: false
   end
 
   private

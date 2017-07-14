@@ -17,7 +17,7 @@
         = l.score
     .separator= '|'
     .comments
-      = icon('comments-o')
+      %a{href: collection_link_path(@collection.link_handle, l.id), title: 'Comments'}= icon('comments-o')
       = l.comments.count
     - if current_user == l.user || current_user == l.collection.user
       .separator= '|'

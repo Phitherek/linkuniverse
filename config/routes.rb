@@ -84,6 +84,8 @@ Rails.application.routes.draw do # The priority is based upon order of creation:
       member do
         post 'add_comment'
         get 'edit_comment'
+        get 'cancel_edit_comment'
+        get 'comment_count'
         patch 'update_comment'
         delete 'destroy_comment'
         patch 'upvote'
