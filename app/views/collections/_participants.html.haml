@@ -1,0 +1,25 @@
+%h3 Participants
+- if c.link_collection_memberships.empty?
+  .alert.alert-info You have not invited any participants yet!
+%table.table.table-striped.table-hover.text-center.participants{data: {collection_id: c.id}}
+  %thead
+    %tr
+      %th.text-center Username
+      %th.text-center Permission
+      %th.text-center Active?
+      %th.text-center Actions
+  %tbody
+    - c.link_collection_memberships.each do |m|
+      %tr.participant{data: {id: m.id}}
+        %td.username= m.user.username
+        %td.permission= select_tag :permission, options_for_select(%w(view vote comment edit).collect { |p| [p.camelize, p] }, m.permission), prompt: 'Select permission...', class: 'form-control'
+        %td.is_active= m.active? ? icon('check', class: 'fa-2x') : icon('times', class: 'fa-2x')
+        %td.actions
+          = link_to 'Save', '#', class: 'btn btn-primary save-participant'
+          = link_to 'Delete', '#', class: 'btn btn-danger delete-participant'
+    %tr.new-participant
+      %td= text_field_tag :username, '', class: 'form-control'
+      %td= select_tag :permission, options_for_select(%w(view vote comment edit).collect { |p| [p.camelize, p] }), prompt: 'Select permission...', class: 'form-control'
+      %td= icon('times', class: 'fa-2x')
+      %td.actions
+        = link_to 'Add participant', '#', class: 'btn btn-success add-participant'

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :find_user, except: [:login, :logout, :register, :me, :edit_me, :update_me, :destroy_me, :do_destroy_me]
+  before_action :find_user, except: [:login, :logout, :register, :me, :edit_me, :update_me, :destroy_me, :do_destroy_me, :accept_membership, :cancel_membership]
   before_action :require_current_user, except: [:register, :login, :show]
 
   def login
@@ -53,6 +53,7 @@ class UsersController < ApplicationController
   def me
     add_breadcrumb 'Home', root_path
     add_breadcrumb 'Your profile'
+    @pending_memberships = current_user.link_collection_memberships.inactive
   end
 
   def edit_me
@@ -97,6 +98,34 @@ class UsersController < ApplicationController
     redirect_to root_url
   end
 
+  def accept_membership
+    begin
+      @membership = current_user.link_collection_memberships.inactive.find(params[:membership_id])
+      @membership.active = true
+      if @membership.save
+        flash[:notice] = 'Invitation to participate in link collection accepted successfully!'
+      else
+        flash[:error] = "Could not accept invitation to participate in link collection: #{@membership.errors.full_messages.join(',')}!"
+      end
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = 'Could not find invitation to participate in link collection!'
+    end
+    redirect_to me_users_path
+  end
+
+  def cancel_membership
+    begin
+      @membership = current_user.link_collection_memberships.inactive.find(params[:membership_id])
+      if @membership.destroy
+        flash[:notice] = 'Invitation to participate in link collection rejected successfully!'
+      else
+        flash[:error] = 'Could not reject invitation to participate in link collection!'
+      end
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = 'Could not find invitation to participate in link collection!'
+    end
+    redirect_to me_users_path
+  end
 
   private
 

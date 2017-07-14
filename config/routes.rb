@@ -67,6 +67,8 @@ Rails.application.routes.draw do # The priority is based upon order of creation:
       patch 'update_me'
       get 'destroy_me'
       delete 'do_destroy_me'
+      patch 'accept_membership'
+      delete 'cancel_membership'
     end
   end
 
@@ -79,6 +81,10 @@ Rails.application.routes.draw do # The priority is based upon order of creation:
     member do
       patch 'upvote'
       patch 'downvote'
+      post 'add_participant'
+      patch 'update_participant'
+      delete 'destroy_participant'
+      delete 'cancel_participation'
     end
     resources :links, except: [:index] do
       member do

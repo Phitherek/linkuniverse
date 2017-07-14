@@ -17,6 +17,15 @@
       %a.btn.btn-danger{href: collection_path(@collection), data: {method: 'delete', confirm: 'Do you really want to delete this collection and all associated links and subcollections?'}}
         = icon('times')
         Delete
+    .participants-wrapper
+      = render partial: 'participants', locals: {c: @collection}
+  - if @collection.link_collection_memberships.where(user: current_user).any?
+    .participation{data: {collection_id: @collection.id}}
+      %h3 Your participation
+      %dl.dl-horizontal
+        %dt Permissions:
+        %dd= @collection.descriptive_permission_for(current_user)
+      = link_to 'Cancel participation', cancel_participation_collection_path(@collection.id), method: :delete, class: 'btn btn-danger cancel-participation'
   - if @collection.children_count_for(current_user) > 0
     .subcollections
       %h3 Subcollections

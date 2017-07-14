@@ -27,3 +27,24 @@
 %a.btn.btn-danger{href: destroy_me_users_path}
   = icon('times')
   Delete
+.pending-memberships
+  %h3 Invitations to participate in link collections
+  - if @pending_memberships.empty?
+    .alert.alert-info No invitations to participate in link collections!
+  - else
+    %table.table.table-stripes.table-hover.text-center
+      %thead
+        %tr
+          %th.text-center Collection name
+          %th.text-center Collection author
+          %th.text-center Your permissions
+          %th.text-center Actions
+      %tbody
+        - @pending_memberships.each do |membership|
+          %tr
+            %td= membership.link_collection.name
+            %td= membership.link_collection.user.username
+            %td= membership.link_collection.descriptive_permission_for(current_user)
+            %td
+              = link_to 'Accept', accept_membership_users_path(membership_id: membership.id), method: :patch, class: 'btn btn-success accept-membership'
+              = link_to 'Reject', cancel_membership_users_path(membership_id: membership.id), method: :delete, class: 'btn btn-danger cancel-membership'

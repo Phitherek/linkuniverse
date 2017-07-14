@@ -5,4 +5,7 @@ class LinkCollectionMembership < ActiveRecord::Base
   validates :user_id, presence: true, uniqueness: { scope: :link_collection }
   validates :link_collection_id, presence: true
   validates :permission, inclusion: { in: %w(view vote comment edit) }
+
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
 end

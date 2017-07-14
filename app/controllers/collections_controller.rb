@@ -1,20 +1,20 @@
 class CollectionsController < ApplicationController
-  before_action :find_collection, only: [:edit, :update, :destroy, :upvote, :downvote]
+  before_action :find_collection, only: [:edit, :update, :destroy, :upvote, :downvote, :add_participant, :update_participant, :destroy_participant, :cancel_participation]
   before_action :require_current_user, except: [:index, :public, :show]
 
   def index
     if current_user.nil?
       @collections = LinkCollection.pub.toplevel.limit(9).to_a
     else
-      @own_collections = current_user.collections.unscoped.toplevel.limit(9).order(updated_at: :desc).to_a
+      @own_collections = current_user.collections.toplevel.limit(9).order(updated_at: :desc).to_a
       @viewable_collections = current_user.viewable_collections.select { |c| c.parent == nil }.sort { |c1, c2| c2.updated_at <=> c1.updated_at }.first(9)
-      @public_collections = LinkCollection.pub.toplevel.limit(9).to_a
+      @public_collections = LinkCollection.pub.toplevel.order(updated_at: :desc).limit(9).to_a
     end
     add_breadcrumb 'Home'
   end
 
   def own
-    @own_collections = current_user.collections.unscoped.toplevel.order(updated_at: :desc).to_a
+    @own_collections = current_user.collections.toplevel.order(updated_at: :desc).to_a
     add_breadcrumb 'Home', root_path
     add_breadcrumb 'Your collections'
   end
@@ -65,7 +65,7 @@ class CollectionsController < ApplicationController
       elsif @collection.user == current_user
         add_breadcrumb 'Your collections', own_collections_path
         add_breadcrumb @collection.name
-      elsif @collection.permission_for(current_user).present?
+      elsif @collection.link_collection_memberships.where(user: current_user).any?
         add_breadcrumb 'Collections shared with you', shared_collections_path
         add_breadcrumb @collection.name
       elsif @collection.pub?
@@ -137,6 +137,54 @@ class CollectionsController < ApplicationController
       end
     end
     render layout: false
+  end
+
+  def add_participant
+    if @collection.user == current_user
+      @user = User.find_by_username_or_email(params[:user_key])
+      if @user != current_user
+        @membership = @collection.link_collection_memberships.create(user: @user, permission: params[:permission])
+        @collection.reload
+      end
+    end
+    render layout: false
+  end
+
+  def update_participant
+    begin
+      if @collection.user == current_user
+        @membership = @collection.link_collection_memberships.find(params[:membership_id])
+        @membership.update(permission: params[:permission])
+        @collection.reload
+      end
+      render layout: false
+    rescue ActiveRecord::RecordNotFound
+      render layout: false
+    end
+  end
+
+  def destroy_participant
+    begin
+      if @collection.user == current_user
+        @membership = @collection.link_collection_memberships.find(params[:membership_id])
+        @membership.destroy
+        @collection.reload
+      end
+      render layout: false
+    rescue ActiveRecord::RecordNotFound
+      render layout: false
+    end
+  end
+
+  def cancel_participation
+    m = @collection.link_collection_memberships.where(user: current_user).first
+    if m.try(:destroy)
+      flash[:notice] = 'Membership in collection cancelled successfully! You have to get invited again to regain it.'
+      redirect_to shared_collections_url
+    else
+      flash[:error] = 'Could not cancel membership in collection!'
+      redirect_to collection_url(@collection.link_handle)
+    end
   end
 
   private

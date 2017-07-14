@@ -35,11 +35,21 @@ class LinksController < ApplicationController
 
   def show
     add_breadcrumb 'Home', root_path
-    if @collection.user == current_user
+    if current_user.blank?
+      if @collection.pub?
+        add_breadcrumb 'Public collections', public_collections_path
+        add_breadcrumb @collection.name, collection_path(@collection.link_handle)
+      else
+        render_error :forbidden
+      end
+    elsif @collection.user == current_user
       add_breadcrumb 'Your collections', own_collections_path
       add_breadcrumb @collection.name, collection_path(@collection.link_handle)
-    elsif @collection.permission_for(current_user) == 'edit'
+    elsif @collection.link_collection_memberships.where(user: current_user).any?
       add_breadcrumb 'Collections shared with you', shared_collections_path
+      add_breadcrumb @collection.name, collection_path(@collection.link_handle)
+    elsif @collection.pub?
+      add_breadcrumb 'Public collections',public_collections_path
       add_breadcrumb @collection.name, collection_path(@collection.link_handle)
     else
       render_error :forbidden
