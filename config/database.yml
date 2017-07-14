@@ -23,3 +23,9 @@ test:
   username: linkuniverse
   password: L1nkUn1v3r53
   database: linkuniverse_test
+
+production:
+  <<: *default
+  username: <%= ENV['LINKUNIVERSE_DB_USERNAME'] %>
+  password: <%= ENV['LINKUNIVERSE_DB_PASSWORD'] %>
+  database: <%= ENV['LINKUNIVERSE_DB'] %>
