@@ -116,14 +116,20 @@ class LinksController < ApplicationController
   end
 
   def add_comment
-    @comment = @link.comments.create(user: current_user, content: params[:content])
+    if @link.user == current_user || @link.collection.user == current_user || %w(comment edit owner).include?(@link.collection.permission_for(current_user))
+      @comment = @link.comments.create(user: current_user, content: params[:content])
+    end
     render layout: false
   end
 
   def edit_comment
     begin
       @comment = @link.comments.find(params[:comment_id])
-      render layout: false
+      if @comment.user == current_user || @link.user == current_user || @link.collection.user == current_user
+        render layout: false
+      else
+        render :cancel_edit_comment, layout: false
+      end
     rescue ActiveRecord::RecordNotFound
       render nothing: true
     end
@@ -141,7 +147,9 @@ class LinksController < ApplicationController
   def update_comment
     begin
       @comment = @link.comments.find(params[:comment_id])
-      @comment.update(content: params[:content])
+      if @comment.user == current_user || @link.user == current_user || @link.collection.user == current_user
+        @comment.update(content: params[:content])
+      end
       render layout: false
     rescue ActiveRecord::RecordNotFound
       render layout: false
@@ -151,7 +159,9 @@ class LinksController < ApplicationController
   def destroy_comment
     begin
       @comment = @link.comments.find(params[:comment_id])
-      @comment.destroy
+      if @comment.user == current_user || @link.user == current_user || @link.collection.user == current_user
+        @comment.destroy
+      end
       render layout: false
     rescue ActiveRecord::RecordNotFound
       render layout: false
