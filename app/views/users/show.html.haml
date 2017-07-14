@@ -1,1 +1,24 @@
-
+- content_for :userbox do
+  = render partial: "application/userbox", locals: {u: current_user}
+- content_for :title do
+  #{@user.username}'s profile
+%h2 #{@user.username}'s profile
+%dl.dl-horizontal
+  %dt Username:
+  %dd= @user.username
+  %dt Description:
+  %dd= simple_format @user.description
+  %dt Total collections:
+  %dd= @user.collections.count
+  %dt Total links:
+  %dd= @user.links.count
+  %dt Total votes:
+  %dd= @user.votes.count
+  %dt Total comments:
+  %dd= @user.comments.count
+%h3 Last updated collections
+- if @latest_collections.empty?
+  .alert.alert-info No collections from this user yet!
+- else
+  - while @latest_collections.count > 0
+    = render partial: 'collections/collection_row', locals: {cs: @latest_collections.pop(3)}

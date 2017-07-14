@@ -10,6 +10,17 @@
   %dd= current_user.email
   %dt Description:
   %dd= simple_format current_user.description
+  %dt Total collections:
+  %dd= current_user.collections.count
+  %dt Total links:
+  %dd= current_user.links.count
+  %dt Total votes:
+  %dd= current_user.votes.count
+  %dt Total comments:
+  %dd= current_user.comments.count
+%a.btn.btn-primary{href: user_path(current_user.username)}
+  = icon('eye')
+  Show public profile
 %a.btn.btn-warning{href: edit_me_users_path}
   = icon('edit')
   Edit

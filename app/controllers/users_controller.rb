@@ -44,6 +44,10 @@ class UsersController < ApplicationController
   end
 
   def show
+    add_breadcrumb 'Home', root_path
+    add_breadcrumb 'Users'
+    add_breadcrumb @user.username
+    @latest_collections = @user.collections.toplevel.to_a.select { |c| c.permission_for(current_user).present? }.sort { |c1, c2| c2.updated_at <=> c1.updated_at }.first(9)
   end
 
   def me

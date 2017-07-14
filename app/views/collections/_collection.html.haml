@@ -1,4 +1,4 @@
 .collection
     %h2= link_to c.name, collection_path(c.link_handle), class: :name
     .description= simple_format c.description
-    = render partial: 'collection_metadata', locals: {c: c}
+    = render partial: 'collections/collection_metadata', locals: {c: c}

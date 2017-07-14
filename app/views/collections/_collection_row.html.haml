@@ -1,10 +1,10 @@
 .row
   - if cs[0].present?
     .col-sm-4
-      = render partial: 'collection', locals: {c: cs[0]}
+      = render partial: 'collections/collection', locals: {c: cs[0]}
   - if cs[1].present?
     .col-sm-4
-      = render partial: 'collection', locals: {c: cs[1]}
+      = render partial: 'collections/collection', locals: {c: cs[1]}
   - if cs[2].present?
     .col-sm-4
-      = render partial: 'collection', locals: {c: cs[2]}
+      = render partial: 'collections/collection', locals: {c: cs[2]}

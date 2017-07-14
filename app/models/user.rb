@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   has_many :link_collection_memberships, dependent: :destroy
   has_many :links, dependent: :destroy
   has_secure_password
+  has_many :votes, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true
   validates :username, uniqueness: true
