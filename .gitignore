@@ -17,3 +17,5 @@
 *~
 *#
 .rvmrc
+*.iml
+.idea
