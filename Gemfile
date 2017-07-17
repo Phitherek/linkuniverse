@@ -47,3 +47,4 @@ gem 'shoulda-matchers'
 gem 'httparty'
 gem 'bootstrap-sass'
 gem 'font-awesome-sass'
+gem 'letter_opener', group: :development
