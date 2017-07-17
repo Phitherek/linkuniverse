@@ -73,7 +73,7 @@ Rails.application.configure do
     port: 465,
     openssl_verify_mode: :peer
   }
-  config.action_mailer.default_options = { from: 'linkuniverse-noreply@phitherek.me' }
+
   config.action_mailer.default_url_options = { host: 'https://linkuniverse.phitherek.me', port: 443 }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

@@ -69,6 +69,13 @@ Rails.application.routes.draw do # The priority is based upon order of creation:
       delete 'do_destroy_me'
       patch 'accept_membership'
       delete 'cancel_membership'
+      get 'activate'
+      get 'start_password_reset'
+      post 'do_start_password_reset'
+      get 'reset_password'
+      post 'do_reset_password'
+      get 'resend_activation_email'
+      post 'do_resend_activation_email'
     end
   end
 

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
-  before_action :find_user, except: [:login, :logout, :register, :me, :edit_me, :update_me, :destroy_me, :do_destroy_me, :accept_membership, :cancel_membership]
-  before_action :require_current_user, except: [:register, :login, :show]
+  before_action :find_user, except: [:login, :logout, :register, :me, :edit_me, :update_me, :destroy_me, :do_destroy_me, :accept_membership, :cancel_membership, :activate, :start_password_reset, :do_start_password_reset, :resend_activation_email, :do_resend_activation_email]
+  before_action :require_current_user, except: [:register, :login, :show, :activate, :start_password_reset, :do_start_password_reset, :resend_activation_email, :do_resend_activation_email]
 
   def login
     add_breadcrumb 'Home', root_path
@@ -35,7 +35,7 @@ class UsersController < ApplicationController
     if request.post?
       @user.attributes = user_params
       if @user.save
-        flash[:notice] = "Registration successful!"
+        flash[:notice] = "Registration successful! Activation e-mail has been sent to #{@user.email}!"
         redirect_to root_path and return
       else flash[:error] = "Could not register: " + @user.errors.full_messages.join(", ") + "!"
       end
@@ -78,7 +78,7 @@ class UsersController < ApplicationController
       end
     else
       flash[:error] = 'Could not update your profile: Invalid current password!'
-      redirect_to edit_me_users_path and return
+      redirect_to edit_me_users_path
     end
   end
 
@@ -125,6 +125,51 @@ class UsersController < ApplicationController
       flash[:error] = 'Could not find invitation to participate in link collection!'
     end
     redirect_to me_users_path
+  end
+
+  def activate
+    if current_user.present?
+      flash[:notice] = 'You are already logged in!'
+      redirect_to root_url and return
+    end
+    @user = User.inactive.find_by_activation_token(params[:activation_token])
+    if @user.present?
+      @user.active = true
+      if @user.save
+        flash[:notice] = 'Account activated successfully!'
+        redirect_to login_users_url
+      else
+        flash[:error] = "Could not activate account: #{@user.errors.full_messages.join(', ')}!"
+        redirect_to root_url
+      end
+    else
+      flash[:error] = 'Invalid token!'
+      redirect_to root_url
+    end
+  end
+
+  def start_password_reset
+
+  end
+
+  def do_start_password_reset
+
+  end
+
+  def reset_password
+
+  end
+
+  def do_reset_password
+
+  end
+
+  def resend_activation_email
+
+  end
+
+  def do_resend_activation_email
+
   end
 
   private

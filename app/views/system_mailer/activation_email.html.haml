@@ -1,0 +1,5 @@
+%p Someone (probably you) has used this e-mail address to register an account in LinkUniverse. Please visit the link below to complete the activation.
+
+%p= link_to 'Complete activation', activate_users_url(activation_token: @user.activation_token)
+
+%p If you didn't register an account in LinkUniverse, simply ignore this message. The account will remain inactive unless you visit the link above.

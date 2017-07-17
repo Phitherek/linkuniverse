@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :destroy
 
   before_create :generate_activation_token
+  after_create :send_activation_email
 
   validates :email, presence: true, uniqueness: true
   validates :username, uniqueness: true
@@ -42,11 +43,15 @@ class User < ActiveRecord::Base
     end
   end
 
+  def send_activation_email
+    SystemMailer.activation_email(self).deliver
+  end
+
   private
 
   def generate_activation_token
     self.activation_token = loop do
-      SecureRandom.urlsafe_base64(nil, false)
+      token = SecureRandom.urlsafe_base64(nil, false)
       break token unless User.exists?(activation_token: token)
     end
   end
