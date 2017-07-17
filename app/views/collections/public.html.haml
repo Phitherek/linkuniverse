@@ -2,7 +2,15 @@
   Public collections
 - content_for :userbox do
   = render partial: "application/userbox", locals: {u: current_user}
-= render partial: 'public_collections'
+= form_tag '#', class: 'search-public form-horizontal' do
+  .form-group
+    .col-sm-12
+      = label_tag :filter, 'Search:', class: 'sr-only'
+      .input-group
+        .input-group-addon= icon('search')
+        = text_field_tag :filter, '', class: 'form-control', placeholder: 'Search by collection name...'
+.public-collections-list
+  = render partial: 'public_collections'
 - if current_user.present?
   .row.add-collection-btn
     .col-sm-12

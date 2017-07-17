@@ -77,6 +77,9 @@ Rails.application.routes.draw do # The priority is based upon order of creation:
       get 'own'
       get 'shared'
       get 'public'
+      get 'own_list'
+      get 'shared_list'
+      get 'public_list'
     end
     member do
       patch 'upvote'

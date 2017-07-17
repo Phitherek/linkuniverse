@@ -1,0 +1,5 @@
+- if collections.empty?
+  .alert.alert-info= no_collections_msg
+- else
+  - while collections.count > 0
+    = render partial: "collection_row", locals: { cs: collections.pop(3) }

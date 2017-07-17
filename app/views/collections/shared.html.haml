@@ -2,7 +2,15 @@
   Collections shared with you
 - content_for :userbox do
   = render partial: "application/userbox", locals: {u: current_user}
-= render partial: 'viewable_collections'
+= form_tag '#', class: 'search-shared form-horizontal' do
+  .form-group
+    .col-sm-12
+      = label_tag :filter, 'Search:', class: 'sr-only'
+      .input-group
+        .input-group-addon= icon('search')
+        = text_field_tag :filter, '', class: 'form-control', placeholder: 'Search by collection name...'
+.shared-collections-list
+  = render partial: 'viewable_collections'
 .row.add-collection-btn
   .col-sm-12
     %a.btn.btn-success{href: new_collection_path}

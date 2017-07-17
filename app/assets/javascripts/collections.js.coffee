@@ -61,3 +61,36 @@ $(document).on 'click', '.collection .participants .participant a.btn.delete-par
     data: {membership_id: membershipId}
     success: (data) ->
       $('.collection .participants-wrapper').html(data)
+
+$(document).on 'input propertychange', 'form.search-public input[name="filter"]', (e) ->
+  e.preventDefault()
+  target = $(this)
+  filter = target.val()
+  $.ajax
+    type: 'GET'
+    url: '/collections/public_list'
+    data: { filter: filter }
+    success: (data) ->
+      $('.public-collections-list').html(data)
+
+$(document).on 'input propertychange', 'form.search-shared input[name="filter"]', (e) ->
+  e.preventDefault()
+  target = $(this)
+  filter = target.val()
+  $.ajax
+    type: 'GET'
+    url: '/collections/shared_list'
+    data: { filter: filter }
+    success: (data) ->
+      $('.shared-collections-list').html(data)
+
+$(document).on 'input propertychange', 'form.search-own input[name="filter"]', (e) ->
+  e.preventDefault()
+  target = $(this)
+  filter = target.val()
+  $.ajax
+    type: 'GET'
+    url: '/collections/own_list'
+    data: { filter: filter }
+    success: (data) ->
+      $('.own-collections-list').html(data)

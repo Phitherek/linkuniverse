@@ -1,6 +1,2 @@
 %h3 Your collections
-- if @own_collections.empty?
-  .alert.alert-info You have no collections yet...
-- else
-  - while @own_collections.count > 0
-    = render partial: "collection_row", locals: { cs: @own_collections.pop(3) }
+= render partial: 'collections_inner', locals: {collections: @own_collections, no_collections_msg: 'You have no collections yet...'}

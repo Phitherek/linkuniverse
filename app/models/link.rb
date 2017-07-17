@@ -11,7 +11,7 @@ class Link < ActiveRecord::Base
   validates :collection_id, presence: true
   validates :user_id, presence: true
   
-  scope :like, ->(q) { where("UPPER(title) LIKE UPPER('%#{q}%') OR UPPER(url) LIKE UPPER('%#{q}%')") }
+  scope :like, ->(q) { where("UPPER(title) LIKE UPPER(?) OR UPPER(url) LIKE UPPER(?)", "%#{q}%", "%#{q}%") }
   
   def fetch_title!
     t = nil

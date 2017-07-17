@@ -12,7 +12,7 @@ class LinkCollection < ActiveRecord::Base
   default_scope { order(updated_at: :desc) }
   scope :priv, -> { where(pub: false) }
   scope :pub, -> { where(pub: true) }
-  scope :like, ->(q) { where("UPPER(name) LIKE UPPER('%#{q}%')") }
+  scope :like, ->(q) { where("UPPER(name) LIKE UPPER(?)", "%#{q}%") }
   scope :toplevel, -> { where(parent: nil) }
   
   def pub!

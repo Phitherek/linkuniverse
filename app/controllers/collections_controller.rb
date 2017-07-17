@@ -1,6 +1,6 @@
 class CollectionsController < ApplicationController
   before_action :find_collection, only: [:edit, :update, :destroy, :upvote, :downvote, :add_participant, :update_participant, :destroy_participant, :cancel_participation]
-  before_action :require_current_user, except: [:index, :public, :show]
+  before_action :require_current_user, except: [:index, :public, :show, :public_list]
 
   def index
     if current_user.nil?
@@ -14,21 +14,44 @@ class CollectionsController < ApplicationController
   end
 
   def own
-    @own_collections = current_user.collections.toplevel.order(updated_at: :desc).to_a
+    @own_collections = current_user.collections.toplevel.order(updated_at: :desc)
+    @own_collections = @own_collections.like(params[:filter]) if params[:filter]
+    @own_collections = @own_collections.to_a
     add_breadcrumb 'Home', root_path
     add_breadcrumb 'Your collections'
   end
 
   def shared
-    @viewable_collections = current_user.viewable_collections.select { |c| c.parent == nil }.sort { |c1, c2| c2.updated_at <=> c1.updated_at }
+    @viewable_collections = current_user.viewable_collections(params[:filter]).select { |c| c.parent == nil }.sort { |c1, c2| c2.updated_at <=> c1.updated_at }
     add_breadcrumb 'Home', root_path
     add_breadcrumb 'Collections shared with you'
   end
 
   def public
-    @public_collections = LinkCollection.pub.toplevel.order(updated_at: :desc).to_a
+    @public_collections = LinkCollection.pub.toplevel.order(updated_at: :desc)
+    @public_collections = @public_collections.like(params[:filter]) if params[:filter]
+    @public_collections = @public_collections.to_a
     add_breadcrumb 'Home', root_path
     add_breadcrumb 'Public collections'
+  end
+
+  def own_list
+    @own_collections = current_user.collections.toplevel.order(updated_at: :desc)
+    @own_collections = @own_collections.like(params[:filter]) if params[:filter]
+    @own_collections = @own_collections.to_a
+    render layout: false
+  end
+
+  def shared_list
+    @viewable_collections = current_user.viewable_collections(params[:filter]).select { |c| c.parent == nil }.sort { |c1, c2| c2.updated_at <=> c1.updated_at }
+    render layout: false
+  end
+
+  def public_list
+    @public_collections = LinkCollection.pub.toplevel.order(updated_at: :desc)
+    @public_collections = @public_collections.like(params[:filter]) if params[:filter]
+    @public_collections = @public_collections.to_a
+    render layout: false
   end
 
   def new
