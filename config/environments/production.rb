@@ -70,8 +70,8 @@ Rails.application.configure do
     user_name: ENV['LINKUNIVERSE_MAILGUN_LOGIN'],
     password: ENV['LINKUNIVERSE_MAILGUN_PASSWORD'],
     authentication: :plain,
-    port: 465,
-    openssl_verify_mode: :peer
+    port: 587,
+    enable_starttls_auto: true
   }
 
   config.action_mailer.default_url_options = { host: 'https://linkuniverse.phitherek.me', port: 443 }
