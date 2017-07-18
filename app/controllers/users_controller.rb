@@ -103,6 +103,9 @@ class UsersController < ApplicationController
       @membership = current_user.link_collection_memberships.inactive.find(params[:membership_id])
       @membership.active = true
       if @membership.save
+        if @membership.link_collection.user.invitation_accept_notification_enabled
+          SystemMailer.invitation_accept_notification_email(@membership).deliver
+        end
         flash[:notice] = 'Invitation to participate in link collection accepted successfully!'
       else
         flash[:error] = "Could not accept invitation to participate in link collection: #{@membership.errors.full_messages.join(',')}!"
@@ -236,7 +239,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:username, :email, :description, :password, :password_confirmation)
+    params.require(:user).permit(:username, :email, :description, :password, :password_confirmation, :invitation_notification_enabled, :invitation_accept_notification_enabled)
   end
 
   def find_user

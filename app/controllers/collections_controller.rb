@@ -167,6 +167,9 @@ class CollectionsController < ApplicationController
       @user = User.find_by_username_or_email(params[:user_key])
       if @user != current_user
         @membership = @collection.link_collection_memberships.create(user: @user, permission: params[:permission])
+        if @user.invitation_notification_enabled
+          SystemMailer.invitation_notification_email(@membership).deliver
+        end
         @collection.reload
       end
     end

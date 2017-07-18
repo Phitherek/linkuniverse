@@ -16,4 +16,18 @@ class SystemMailer < ActionMailer::Base
     @current_user = current_user
     mail(to: @user.email, subject: "Contact request from: #{@current_user.username}")
   end
+
+  def invitation_notification_email(membership)
+    @user = membership.user
+    @membership = membership
+    @current_user = membership.link_collection.user
+    mail(to: @user.email, subject: "Invitation to participate in link collection #{@membership.link_collection.name} by user #{@membership.link_collection.user.username}")
+  end
+
+  def invitation_accept_notification_email(membership)
+    @user = membership.link_collection.user
+    @membership = membership
+    @current_user = membership.user
+    mail(to: @user.email, subject: "#{@current_user.username} has accepted your invitation to participate in link collection #{@membership.link_collection.name}")
+  end
 end

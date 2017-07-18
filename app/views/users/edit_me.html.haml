@@ -27,6 +27,18 @@
       = f.password_field :password_confirmation, value: '', class: "form-control"
   .form-group
     .col-sm-4
+      .checkbox
+        %label
+          = f.check_box :invitation_notification_enabled
+          Notification about invitation to participate in link collection
+  .form-group
+    .col-sm-4
+      .checkbox
+        %label
+          = f.check_box :invitation_accept_notification_enabled
+          Notification about acceptance of invitation to participate in link collection
+  .form-group
+    .col-sm-4
       = f.label :password, "Current password:"
       = f.password_field :current_password, value: '', class: "form-control"
   .form-group

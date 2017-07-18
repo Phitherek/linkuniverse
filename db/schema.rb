@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170717154829) do
+ActiveRecord::Schema.define(version: 20170718092619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,11 +65,13 @@ ActiveRecord::Schema.define(version: 20170717154829) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "password_digest",      default: "",    null: false
-    t.boolean  "active",               default: false, null: false
-    t.string   "activation_token",     default: "",    null: false
-    t.boolean  "password_reset_used",  default: true,  null: false
-    t.string   "password_reset_token", default: "",    null: false
+    t.string   "password_digest",                        default: "",    null: false
+    t.boolean  "active",                                 default: false, null: false
+    t.string   "activation_token",                       default: "",    null: false
+    t.boolean  "password_reset_used",                    default: true,  null: false
+    t.string   "password_reset_token",                   default: "",    null: false
+    t.boolean  "invitation_notification_enabled",        default: true,  null: false
+    t.boolean  "invitation_accept_notification_enabled", default: true,  null: false
   end
 
   create_table "votes", force: true do |t|
