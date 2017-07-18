@@ -67,7 +67,7 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address: 'smtp.mailgun.org',
     domain: 'phitherek.me',
-    login: ENV['LINKUNIVERSE_MAILGUN_LOGIN'],
+    user_name: ENV['LINKUNIVERSE_MAILGUN_LOGIN'],
     password: ENV['LINKUNIVERSE_MAILGUN_PASSWORD'],
     authentication: :plain,
     port: 465,
