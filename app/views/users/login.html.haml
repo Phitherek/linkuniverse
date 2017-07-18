@@ -13,3 +13,10 @@
   .form-group
     .col-sm-4
       = submit_tag "Login", class: "btn btn-primary"
+.register-link
+  Don't have an account yet?
+  = link_to 'Register', register_users_path
+.forgot-password-link
+  = link_to 'Forgot your password?', start_password_reset_users_path
+.resend-activation-email-link
+  = link_to 'Activation email did not arrive?', resend_activation_email_users_path

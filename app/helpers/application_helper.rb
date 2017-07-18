@@ -9,7 +9,7 @@ module ApplicationHelper
 
   def current_user
     begin
-      User.find(session[:logged_in_user_id])
+      User.active.find(session[:logged_in_user_id])
     rescue ActiveRecord::RecordNotFound => e
       nil
     end

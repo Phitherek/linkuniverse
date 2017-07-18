@@ -1,0 +1,13 @@
+- content_for :title do
+  Resend activation email
+%h2 Resend activation email
+= form_tag do_resend_activation_email_users_path, class: 'form-horizontal' do
+  .form-group
+    .col-sm-4
+      = label_tag :username, 'Your username:'
+      = text_field_tag :username, '', class: 'form-control'
+  .form-group
+    .col-sm-4
+      = submit_tag 'Resend activation email', class: 'btn btn-primary'
+.login-link
+  = link_to 'Login', login_users_path

@@ -30,15 +30,15 @@ class User < ActiveRecord::Base
     memberships.collect { |m| m.link_collection }
   end
 
-  def password_reset!
+  def start_password_reset
     generate_password_reset_token
     self.password_reset_used = false
-    save!
+    save
   end
 
   def generate_password_reset_token
     self.password_reset_token = loop do
-      SecureRandom.urlsafe_base64(nil, false)
+      token = SecureRandom.urlsafe_base64(nil, false)
       break token unless User.exists?(password_reset_token: token)
     end
   end
@@ -46,8 +46,6 @@ class User < ActiveRecord::Base
   def send_activation_email
     SystemMailer.activation_email(self).deliver
   end
-
-  private
 
   def generate_activation_token
     self.activation_token = loop do

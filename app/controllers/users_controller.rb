@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
-  before_action :find_user, except: [:login, :logout, :register, :me, :edit_me, :update_me, :destroy_me, :do_destroy_me, :accept_membership, :cancel_membership, :activate, :start_password_reset, :do_start_password_reset, :resend_activation_email, :do_resend_activation_email]
-  before_action :require_current_user, except: [:register, :login, :show, :activate, :start_password_reset, :do_start_password_reset, :resend_activation_email, :do_resend_activation_email]
+  before_action :find_user, except: [:login, :logout, :register, :me, :edit_me, :update_me, :destroy_me, :do_destroy_me, :accept_membership, :cancel_membership, :activate, :start_password_reset, :do_start_password_reset, :resend_activation_email, :do_resend_activation_email, :reset_password, :do_reset_password]
+  before_action :require_current_user, except: [:register, :login, :show, :activate, :start_password_reset, :do_start_password_reset, :resend_activation_email, :do_resend_activation_email, :reset_password, :do_reset_password]
 
   def login
     add_breadcrumb 'Home', root_path
@@ -12,7 +12,7 @@ class UsersController < ApplicationController
       end
     elsif request.post?
       @user = User.find_by_username_or_email(params[:key]).try(:authenticate, params[:password])
-      if !@user.nil?
+      if !@user.nil? && @user.active?
         session[:logged_in_user_id] = @user.id
         flash[:notice] = "Login successful!"
         redirect_to root_url and return
@@ -149,27 +149,82 @@ class UsersController < ApplicationController
   end
 
   def start_password_reset
-
+    add_breadcrumb 'Home', root_path
+    add_breadcrumb 'Reset password'
+    if current_user.present?
+      flash[:notice] = 'You are already logged in!'
+      redirect_to root_url
+    end
   end
 
   def do_start_password_reset
-
+    if current_user.present?
+      flash[:notice] = 'You are already logged in!'
+      redirect_to root_url and return
+    end
+    @user = User.active.find_by_username(params[:username])
+    if @user.present? && @user.start_password_reset
+      SystemMailer.reset_password_email(@user).deliver
+    end
+    flash[:notice] = 'If the user exists and is active the reset password email has been sent to its email address!'
+    redirect_to login_users_url
   end
 
   def reset_password
-
+    add_breadcrumb 'Home', root_path
+    add_breadcrumb 'Reset password'
+    if current_user.present?
+      flash[:notice] = 'You are already logged in!'
+      redirect_to root_url and return
+    end
+    @user = User.active.find_by(password_reset_used: false, password_reset_token: params[:password_reset_token])
+    if @user.blank?
+      flash[:error] = 'Bad token!'
+      redirect_to root_url
+    end
   end
 
   def do_reset_password
-
+    if current_user.present?
+      flash[:notice] = 'You are already logged in!'
+      redirect_to root_url and return
+    end
+    @user = User.active.find_by(password_reset_used: false, password_reset_token: params[:password_reset_token])
+    if @user.blank?
+      flash[:error] = 'Bad token!'
+      redirect_to root_url
+    end
+    if @user.update(password: params[:password], password_confirmation: params[:password_confirmation], password_reset_used: true)
+      flash[:notice] = 'Password reset successful!'
+      redirect_to login_users_url
+    else
+      flash[:error] = "Password reset failed: #{@user.errors.full_messages.join(',')}"
+      redirect_to reset_password_users_url(password_reset_token: @user.password_reset_token)
+    end
   end
 
   def resend_activation_email
-
+    add_breadcrumb 'Home', root_path
+    add_breadcrumb 'Resend activation email'
+    if current_user.present?
+      flash[:notice] = 'You are already logged in!'
+      redirect_to root_url
+    end
   end
 
   def do_resend_activation_email
-
+    if current_user.present?
+      flash[:notice] = 'You are already logged in!'
+      redirect_to root_url and return
+    end
+    @user = User.inactive.find_by_username(params[:username])
+    if @user.present?
+      @user.generate_activation_token if @user.activation_token.blank?
+      @user.save
+      @user.send_activation_email
+    end
+    flash[:notice] = 'If the user exists and has not yet been activated the activation email has been sent to its email address!'
+    redirect_to root_url
   end
 
   private
@@ -179,7 +234,7 @@ class UsersController < ApplicationController
   end
 
   def find_user
-      @user = User.find_by_username(params[:id])
+      @user = User.active.find_by_username(params[:id])
       render_error :notfound if @user.blank?
   end
 end

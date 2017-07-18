@@ -21,7 +21,8 @@ class ApplicationController < ActionController::Base
 
   def require_current_user
     if current_user.blank?
-      render_error :forbidden
+      flash[:notice] = 'You have to log in to continue!'
+      redirect_to login_users_url
     end
   end
 end
