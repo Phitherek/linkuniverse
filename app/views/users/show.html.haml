@@ -22,3 +22,7 @@
 - else
   - while @latest_collections.count > 0
     = render partial: 'collections/collection_row', locals: {cs: @latest_collections.pop(3)}
+- if current_user.present?
+  %a.ask-for-contact{href: ask_for_contact_user_path(@user.username), data: {method: :post}, class: 'btn btn-primary'}
+    = icon('envelope-o')
+    Ask for contact (send email address)

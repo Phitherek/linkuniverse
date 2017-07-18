@@ -227,6 +227,12 @@ class UsersController < ApplicationController
     redirect_to root_url
   end
 
+  def ask_for_contact
+    SystemMailer.ask_for_contact_email(@user, current_user).deliver
+    flash[:notice] = 'Contact request sent!'
+    redirect_to user_url(@user.username)
+  end
+
   private
 
   def user_params
@@ -234,7 +240,7 @@ class UsersController < ApplicationController
   end
 
   def find_user
-      @user = User.active.find_by_username(params[:id])
-      render_error :notfound if @user.blank?
+    @user = User.active.find_by_username(params[:id])
+    render_error :notfound if @user.blank?
   end
 end

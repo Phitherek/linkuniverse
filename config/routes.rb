@@ -77,6 +77,9 @@ Rails.application.routes.draw do # The priority is based upon order of creation:
       get 'resend_activation_email'
       post 'do_resend_activation_email'
     end
+    member do
+      post 'ask_for_contact'
+    end
   end
 
   resources :collections do
