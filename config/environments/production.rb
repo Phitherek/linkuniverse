@@ -65,7 +65,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: 'smtp.mailgun.com',
+    address: 'smtp.mailgun.org',
     domain: 'phitherek.me',
     user_name: ENV['LINKUNIVERSE_MAILGUN_LOGIN'],
     password: ENV['LINKUNIVERSE_MAILGUN_PASSWORD'],
